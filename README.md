@@ -72,7 +72,8 @@ python main.py
 
 ## 📸 Screenshots
 
-*(Add screenshots of your application here to make it more appealing!)*
+<img width="424" height="891" alt="image" src="https://github.com/user-attachments/assets/a1bc32d1-b6a2-4f27-878b-ebcb6ad1a1f7" />
+
 
 ## 🤝 Contributing
 
