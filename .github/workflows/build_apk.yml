@@ -5,6 +5,9 @@ on:
       - 'v*'
   workflow_dispatch:
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -31,7 +34,7 @@ jobs:
 
       - name: Build APK
         run: |
-          flet build apk --project "facebook_clone" --org "com.nishantjlu" --product "Facebook Clone"
+          flet build apk --project "facebook_clone" --org "com.nishantjlu" --product "Facebook Clone" --yes
 
       - name: Upload APK to Release
         if: startsWith(github.ref, 'refs/tags/')
