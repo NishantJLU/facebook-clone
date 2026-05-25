@@ -23,6 +23,10 @@ class PostCard(ft.Container):
             border_radius=8,
             shadow=ft.BoxShadow(blur_radius=1, color=ft.colors.with_opacity(0.08, ft.colors.BLACK)),
             margin=ft.margin.only(bottom=8),
+            animate_opacity=300,
+            animate_scale=ft.Animation(300, ft.AnimationCurve.DECELERATE),
+            opacity=0,
+            scale=0.9
         )
         
         # Build components
@@ -42,6 +46,11 @@ class PostCard(ft.Container):
             ft.Divider(height=1, color=ft.colors.OUTLINE_VARIANT),
             self.actions_row
         ], spacing=8)
+
+    def did_mount(self):
+        self.opacity = 1
+        self.scale = 1
+        self.update()
 
     def _build_header(self):
         group = self.post.get("group")

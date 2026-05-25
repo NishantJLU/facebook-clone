@@ -13,10 +13,11 @@ class DatabaseManager:
                 cls._instance._initialized = False
             return cls._instance
 
-    def __init__(self, db_path="database/db.json"):
+    def __init__(self, db_path=None):
         if self._initialized:
             return
-        self.db_path = db_path
+        # Prioritize env variable, then parameter, then default
+        self.db_path = os.getenv("DB_PATH", db_path or "database/db.json")
         self.data = {}
         self.active_user_id = 1  # Default to "Hoàng Vũ"
         self.load_db()
@@ -28,11 +29,33 @@ class DatabaseManager:
                 try:
                     with open(self.db_path, "r", encoding="utf-8") as f:
                         self.data = json.load(f)
+                    if not self.data:
+                        self._initialize_default_db()
                 except Exception as e:
                     print(f"Error loading database: {e}")
-                    self.data = {}
+                    self._initialize_default_db()
             else:
-                self.data = {}
+                self._initialize_default_db()
+
+    def _initialize_default_db(self):
+        """Initialize a minimal valid database structure if missing or empty."""
+        self.data = {
+            "users": [
+                {"id": 1, "name": "Hoàng Vũ", "avatar_url": "https://i.pravatar.cc/150?u=1"}
+            ],
+            "posts": [],
+            "stories": [],
+            "recommend_friends": [],
+            "friend_requests": [],
+            "groups": [],
+            "group_posts": [],
+            "group_categories": [],
+            "watch_videos": [],
+            "notifications": [],
+            "products": [],
+            "pages": []
+        }
+        self.save_db()
 
     def save_db(self):
         with self._lock:

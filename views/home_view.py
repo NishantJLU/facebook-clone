@@ -13,6 +13,18 @@ class HomeView(ft.Container):
             padding=ft.padding.only(left=8, right=8, top=4, bottom=4),
         )
         
+        # Search Bar
+        self.search_field = ft.TextField(
+            hint_text="Search posts...",
+            prefix_icon=ft.icons.SEARCH,
+            border_radius=20,
+            text_size=13,
+            content_padding=10,
+            bgcolor=ft.colors.SURFACE_VARIANT,
+            border_color=ft.colors.TRANSPARENT,
+            on_change=self.refresh_feed
+        )
+        
         # Scrollable Feed Column
         self.feed_column = ft.Column(
             scroll=ft.ScrollMode.ALWAYS,
@@ -20,7 +32,10 @@ class HomeView(ft.Container):
             spacing=8
         )
         
-        self.content = self.feed_column
+        self.content = ft.Column([
+            self.search_field,
+            self.feed_column
+        ], spacing=8, expand=True)
         self.refresh_feed()
 
     def refresh_feed(self, e=None):
@@ -45,11 +60,19 @@ class HomeView(ft.Container):
         )
         self.feed_column.controls.append(stories_container)
         
-        # 3. Posts List
+        # 3. Posts List (Filtered by search)
+        search_query = self.search_field.value.lower() if hasattr(self, 'search_field') else ""
         posts = self.db_manager.get_posts()
+        
         for post in posts:
-            post_card = PostCard(post, self.db_manager, on_post_updated=self.refresh_feed)
-            self.feed_column.controls.append(post_card)
+            # Simple Filter: check content or author name
+            author = self.db_manager.get_user(post.get("userId"))
+            author_name = author.get("name", "").lower() if author else ""
+            content = post.get("content", "").lower()
+            
+            if search_query in content or search_query in author_name:
+                post_card = PostCard(post, self.db_manager, on_post_updated=self.refresh_feed)
+                self.feed_column.controls.append(post_card)
         
         if self.page:
             self.update()
