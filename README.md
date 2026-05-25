@@ -5,8 +5,9 @@ A modern, responsive Facebook UI clone built entirely using the [Flet](https://f
 ## 🚀 Features
 
 - **Responsive Design:** Adapts from a centered phone mockup on desktop to a full-screen mobile experience.
+- **Real-time Search:** Instantly filter the home feed by post content or author name.
 - **Multi-View Navigation:**
-  - **Home:** Main feed with stories and posts.
+  - **Home:** Main feed with search, stories, and posts.
   - **Watch:** Video feed simulation.
   - **Groups:** Group discovery and management.
   - **Profile:** User profile information and personal feed.
@@ -15,15 +16,17 @@ A modern, responsive Facebook UI clone built entirely using the [Flet](https://f
 - **High-Fidelity Components:**
   - Story cards with interactive feel.
   - Post composer and feed items.
+  - **Smooth Animations:** Posts feature fade-in and scale-in transitions using Flet's animation engine.
   - Custom status bar and home indicator mockup.
 - **Theme Support:** Dynamic Dark/Light mode switching.
-- **Modular Architecture:** Clean separation of views, components, and database logic.
+- **Modular Architecture:** Clean separation of views, components, and database logic with `.env` configuration support.
 
 ## 🛠️ Technology Stack
 
 - **Language:** Python 3.x
 - **UI Framework:** [Flet](https://flet.dev/) (powered by Flutter)
-- **Database:** JSON-based local storage management.
+- **Database:** JSON-based local storage with automatic skeleton initialization.
+- **Configuration:** Environment-based setup via `.env`.
 
 ## 📁 Project Structure
 
