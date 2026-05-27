@@ -1,5 +1,6 @@
 import flet as ft
 from database.db_manager import DatabaseManager
+from views.marketplace_view import get_marketplace_view
 
 class MenuView(ft.Container):
     def __init__(self, db_manager: DatabaseManager, on_theme_toggle=None, on_tab_switch=None):
@@ -55,6 +56,36 @@ class MenuView(ft.Container):
             on_click=self._handle_profile_click
         )
         self.scroll_column.controls.append(profile_card)
+
+        # 2.5 Account Switcher
+        users = self.db_manager.get_users()
+        account_items = []
+        for user in users[:5]: # Show first 5 users
+            if user.get("id") == self.db_manager.active_user_id:
+                continue
+            account_items.append(
+                ft.Container(
+                    content=ft.Row([
+                        ft.CircleAvatar(foreground_image_url=user.get("avatar_url"), radius=14),
+                        ft.Text(user.get("name"), size=12, weight=ft.FontWeight.W_500),
+                    ], spacing=8),
+                    padding=ft.padding.symmetric(8, 12),
+                    on_click=lambda e, uid=user.get("id"): self._switch_account(uid)
+                )
+            )
+        
+        if account_items:
+            account_switcher = ft.Container(
+                content=ft.Column([
+                    ft.Text("Switch Account", size=13, weight=ft.FontWeight.BOLD),
+                    ft.Column(account_items, spacing=0)
+                ], spacing=8),
+                padding=10,
+                border_radius=8,
+                bgcolor=ft.colors.SURFACE,
+                shadow=ft.BoxShadow(blur_radius=1, color=ft.colors.with_opacity(0.08, ft.colors.BLACK)),
+            )
+            self.scroll_column.controls.append(account_switcher)
         
         # 3. Grid of shortcuts
         shortcuts = [
@@ -104,7 +135,6 @@ class MenuView(ft.Container):
         )
         
         # 4. Settings Accordion list
-        # We can implement simple collapsible lists using Flet Column and ExpansionTiles
         settings_section = ft.Column([
             ft.ExpansionTile(
                 title=ft.Text("Help & Support", size=13, weight=ft.FontWeight.W_600),
@@ -150,6 +180,13 @@ class MenuView(ft.Container):
         if self.page:
             self.update()
 
+    def _switch_account(self, user_id):
+        new_user = self.db_manager.set_active_user(user_id)
+        self.refresh_menu()
+        self._show_snack(f"Switched to {new_user.get('name')}")
+        if self.page:
+            self.page.update()
+
     def _handle_profile_click(self, e):
         # Switch tab to profile
         if self.on_tab_switch:
@@ -159,6 +196,10 @@ class MenuView(ft.Container):
         if label == "Groups":
             if self.on_tab_switch:
                 self.on_tab_switch(1)  # Groups is tab index 1
+        elif label == "Marketplace":
+            if self.page:
+                self.content = get_marketplace_view(self.db_manager)
+                self.update()
         else:
             self._show_snack(f"Opening {label}...")
 

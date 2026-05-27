@@ -98,48 +98,100 @@ class PostCard(ft.Container):
         )
 
     def _build_attachment(self):
-        img_url = self.post.get("image")
-        if not img_url:
+        images = self.post.get("images", [])
+        single_img = self.post.get("image")
+        
+        if not images and not single_img:
             return ft.Container()
-        return ft.Container(
-            content=ft.Image(
-                src=img_url,
-                fit=ft.ImageFit.COVER,
+            
+        if images:
+            # Multi-image carousel
+            image_controls = []
+            for img_url in images:
+                image_controls.append(
+                    ft.Container(
+                        content=ft.Image(
+                            src=img_url,
+                            fit=ft.ImageFit.COVER,
+                            width=350,
+                            height=250,
+                        ),
+                        border_radius=4,
+                        clip_behavior=ft.ClipBehavior.ANTI_ALIAS,
+                    )
+                )
+            
+            return ft.Container(
+                content=ft.Row(
+                    image_controls,
+                    scroll=ft.ScrollMode.ADAPTIVE,
+                    spacing=8,
+                ),
+                padding=ft.padding.only(bottom=4)
+            )
+        else:
+            # Single image fallback
+            return ft.Container(
+                content=ft.Image(
+                    src=single_img,
+                    fit=ft.ImageFit.COVER,
+                    border_radius=4,
+                    width=400,
+                    height=250,
+                ),
                 border_radius=4,
-                width=400,
-                height=250,
-            ),
-            border_radius=4,
-            clip_behavior=ft.ClipBehavior.ANTI_ALIAS,
-            alignment=ft.alignment.center
-        )
+                clip_behavior=ft.ClipBehavior.ANTI_ALIAS,
+                alignment=ft.alignment.center
+            )
 
     def _build_counters(self):
         # Reactions sum
-        reactions = self.post.get("reactions", {"like": 0, "love": 0, "haha": 0})
+        reactions = self.post.get("reactions", {"like": 0, "love": 0, "haha": 0, "wow": 0, "sad": 0, "angry": 0})
         total_reacts = sum(reactions.values())
         
         # Comments count
         comments = self.post.get("comments", [])
         total_comments = len(comments)
         
-        reacts_row = ft.Row([
-            # Like Circle
-            ft.Container(
-                content=ft.Icon(ft.icons.THUMB_UP, size=10, color=ft.colors.WHITE),
-                bgcolor=ft.colors.BLUE_500,
-                shape=ft.BoxShape.CIRCLE,
-                padding=3
-            ),
-            # Heart Circle
-            ft.Container(
-                content=ft.Icon(ft.icons.FAVORITE, size=10, color=ft.colors.WHITE),
-                bgcolor=ft.colors.RED_500,
-                shape=ft.BoxShape.CIRCLE,
-                padding=3
-            ) if total_reacts > 5 else ft.Container(),
+        # Determine which reaction icons to show (top 3 non-zero)
+        active_reactions = [(k, v) for k, v in reactions.items() if v > 0]
+        active_reactions.sort(key=lambda x: x[1], reverse=True)
+        top_reactions = active_reactions[:3]
+        
+        reaction_icons = []
+        reaction_config = {
+            "like": (ft.icons.THUMB_UP, ft.colors.BLUE_500),
+            "love": (ft.icons.FAVORITE, ft.colors.RED_500),
+            "haha": (ft.icons.SENTIMENT_VERY_SATISFIED, ft.colors.AMBER_400),
+            "wow": (ft.icons.EMOJI_EMOTIONS, ft.colors.AMBER_400),
+            "sad": (ft.icons.SENTIMENT_VERY_DISSATISFIED, ft.colors.AMBER_400),
+            "angry": (ft.icons.SENTIMENT_VERY_DISSATISFIED, ft.colors.ORANGE_700)
+        }
+        
+        for react_type, _ in top_reactions:
+            icon_name, color = reaction_config.get(react_type, (ft.icons.THUMB_UP, ft.colors.BLUE_500))
+            reaction_icons.append(
+                ft.Container(
+                    content=ft.Icon(icon_name, size=10, color=ft.colors.WHITE),
+                    bgcolor=color,
+                    shape=ft.BoxShape.CIRCLE,
+                    padding=3
+                )
+            )
+        
+        if not reaction_icons:
+             reaction_icons.append(
+                ft.Container(
+                    content=ft.Icon(ft.icons.THUMB_UP, size=10, color=ft.colors.WHITE),
+                    bgcolor=ft.colors.BLUE_500,
+                    shape=ft.BoxShape.CIRCLE,
+                    padding=3
+                )
+            )
+
+        reacts_row = ft.Row(reaction_icons + [
             ft.Text(str(total_reacts), size=11, color=ft.colors.ON_SURFACE_VARIANT)
-        ], spacing=4)
+        ], spacing=-4 if len(reaction_icons) > 1 else 4)
         
         comments_row = ft.Row([
             ft.Text(f"{total_comments} comments", size=11, color=ft.colors.ON_SURFACE_VARIANT),
@@ -154,21 +206,30 @@ class PostCard(ft.Container):
 
     def _build_actions(self):
         # We need stateful buttons
-        self.like_button = ft.TextButton(
-            content=ft.Row([
-                ft.Icon(
-                    ft.icons.THUMB_UP_OUTLINED if not self.is_liked else ft.icons.THUMB_UP, 
-                    color=ft.colors.ON_SURFACE_VARIANT if not self.is_liked else ft.colors.BLUE_ACCENT_400, 
-                    size=16
-                ),
-                ft.Text(
-                    "Like", 
-                    size=12, 
-                    weight=ft.FontWeight.W_500,
-                    color=ft.colors.ON_SURFACE_VARIANT if not self.is_liked else ft.colors.BLUE_ACCENT_400
-                )
-            ], spacing=6),
-            on_click=self._handle_like
+        self.like_button_text = ft.Text(
+            "Like", 
+            size=12, 
+            weight=ft.FontWeight.W_500,
+            color=ft.colors.ON_SURFACE_VARIANT if not self.is_liked else ft.colors.BLUE_ACCENT_400
+        )
+        self.like_button_icon = ft.Icon(
+            ft.icons.THUMB_UP_OUTLINED if not self.is_liked else ft.icons.THUMB_UP, 
+            color=ft.colors.ON_SURFACE_VARIANT if not self.is_liked else ft.colors.BLUE_ACCENT_400, 
+            size=16
+        )
+
+        self.like_button = ft.GestureDetector(
+            content=ft.Container(
+                content=ft.Row([
+                    self.like_button_icon,
+                    self.like_button_text
+                ], spacing=6),
+                padding=ft.padding.symmetric(8, 12),
+                border_radius=4,
+            ),
+            on_tap=self._handle_like,
+            on_long_press_start=self._show_reaction_picker,
+            mouse_cursor="pointer"
         )
         
         comment_button = ft.TextButton(
@@ -193,22 +254,108 @@ class PostCard(ft.Container):
             share_button
         ], alignment=ft.MainAxisAlignment.SPACE_EVENLY)
 
+    def _show_reaction_picker(self, e: ft.LongPressStartEvent):
+        if not self.page: return
+
+        reaction_config = [
+            ("Like", ft.icons.THUMB_UP, ft.colors.BLUE_500, "like"),
+            ("Love", ft.icons.FAVORITE, ft.colors.RED_500, "love"),
+            ("Haha", ft.icons.SENTIMENT_VERY_SATISFIED, ft.colors.AMBER_400, "haha"),
+            ("Wow", ft.icons.EMOJI_EMOTIONS, ft.colors.AMBER_400, "wow"),
+            ("Sad", ft.icons.SENTIMENT_VERY_DISSATISFIED, ft.colors.AMBER_400, "sad"),
+            ("Angry", ft.icons.SENTIMENT_VERY_DISSATISFIED, ft.colors.ORANGE_700, "angry"),
+        ]
+
+        reactions = []
+        for name, icon, color, r_type in reaction_config:
+            reactions.append(
+                ft.Container(
+                    content=ft.Icon(icon, color=color, size=24),
+                    padding=8,
+                    on_click=lambda e, rt=r_type: self._handle_reaction_select(rt),
+                    tooltip=name,
+                    shape=ft.BoxShape.CIRCLE,
+                    animate=ft.animation.Animation(200, "decelerate"),
+                    on_hover=lambda e: setattr(e.control, 'scale', 1.3 if e.data == "true" else 1) or e.control.update()
+                )
+            )
+
+        picker = ft.Container(
+            content=ft.Row(reactions, spacing=4, tight=True),
+            bgcolor=ft.colors.SURFACE,
+            border_radius=30,
+            padding=ft.padding.symmetric(4, 8),
+            shadow=ft.BoxShadow(blur_radius=10, color=ft.colors.with_opacity(0.2, ft.colors.BLACK)),
+            left=e.global_x - 100 if hasattr(e, "global_x") else 50,
+            top=e.global_y - 80 if hasattr(e, "global_y") else 50,
+            animate_opacity=200,
+            offset=ft.Offset(0, -0.5),
+            animate_offset=ft.animation.Animation(300, "decelerate")
+        )
+
+        def close_picker(e):
+            self.page.overlay.remove(picker)
+            self.page.update()
+
+        # Add a transparent layer to close picker when clicking outside
+        dismiss_layer = ft.GestureDetector(
+            content=ft.Container(expand=True, bgcolor=ft.colors.TRANSPARENT),
+            on_tap=close_picker
+        )
+        
+        self.page.overlay.append(dismiss_layer)
+        self.page.overlay.append(picker)
+        self.page.update()
+        
+        # Store for closing
+        self._reaction_picker = picker
+        self._dismiss_layer = dismiss_layer
+
+    def _handle_reaction_select(self, reaction_type):
+        if hasattr(self, "_reaction_picker"):
+            self.page.overlay.remove(self._dismiss_layer)
+            self.page.overlay.remove(self._reaction_picker)
+            
+        self.is_liked = True
+        self.db_manager.like_post(self.post.get("id"), reaction_type=reaction_type, increment=True)
+        
+        # Update button visuals based on reaction
+        reaction_config = {
+            "like": (ft.icons.THUMB_UP, ft.colors.BLUE_ACCENT_400, "Like"),
+            "love": (ft.icons.FAVORITE, ft.colors.RED_500, "Love"),
+            "haha": (ft.icons.SENTIMENT_VERY_SATISFIED, ft.colors.AMBER_400, "Haha"),
+            "wow": (ft.icons.EMOJI_EMOTIONS, ft.colors.AMBER_400, "Wow"),
+            "sad": (ft.icons.SENTIMENT_VERY_DISSATISFIED, ft.colors.AMBER_400, "Sad"),
+            "angry": (ft.icons.SENTIMENT_VERY_DISSATISFIED, ft.colors.ORANGE_700, "Angry")
+        }
+        
+        icon, color, text = reaction_config.get(reaction_type)
+        self.like_button_icon.name = icon
+        self.like_button_icon.color = color
+        self.like_button_text.value = text
+        self.like_button_text.color = color
+        
+        self._refresh_counters()
+
     def _handle_like(self, e):
         self.is_liked = not self.is_liked
         # Update db.json
-        self.db_manager.like_post(self.post.get("id"), reaction_type="like", increment=self.is_liked)
+        reaction_type = "like"
+        self.db_manager.like_post(self.post.get("id"), reaction_type=reaction_type, increment=self.is_liked)
         
-        # Refresh self counters
-        # We recreate the counter row and replace it
-        self.content.controls[3] = self._build_counters()
-        # We recreate the button state
-        self.like_button.content.controls[0].name = ft.icons.THUMB_UP if self.is_liked else ft.icons.THUMB_UP_OUTLINED
-        self.like_button.content.controls[0].color = ft.colors.BLUE_ACCENT_400 if self.is_liked else ft.colors.ON_SURFACE_VARIANT
-        self.like_button.content.controls[1].color = ft.colors.BLUE_ACCENT_400 if self.is_liked else ft.colors.ON_SURFACE_VARIANT
+        # Reset to default like button visuals
+        if self.is_liked:
+            self.like_button_icon.name = ft.icons.THUMB_UP
+            self.like_button_icon.color = ft.colors.BLUE_ACCENT_400
+            self.like_button_text.value = "Like"
+            self.like_button_text.color = ft.colors.BLUE_ACCENT_400
+        else:
+            self.like_button_icon.name = ft.icons.THUMB_UP_OUTLINED
+            self.like_button_icon.color = ft.colors.ON_SURFACE_VARIANT
+            self.like_button_text.value = "Like"
+            self.like_button_text.color = ft.colors.ON_SURFACE_VARIANT
         
-        self.update()
-        if self.on_post_updated:
-            self.on_post_updated()
+        self._refresh_counters()
 
     def _handle_comment_click(self, e):
         if self.page:

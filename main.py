@@ -100,6 +100,7 @@ from views.watch_view import get_watch_view
 from views.profile_view import get_profile_view
 from views.notifications_view import get_notifications_view
 from views.menu_view import get_menu_view
+from views.search_results_view import get_search_results_view
 
 def main(page: ft.Page):
     page.title = "Facebook Clone"
@@ -164,9 +165,17 @@ def main(page: ft.Page):
         
         def run_search(_):
             query = search_input.value.strip()
+            if not query: return
             page.dialog.open = False
-            page.snack_bar = ft.SnackBar(content=ft.Text(f"Search results for: '{query}'"), bgcolor=ft.colors.BLUE_800)
-            page.snack_bar.open = True
+            
+            # Switch view to search results
+            main_content_area.content = get_search_results_view(db_manager, query)
+            # Deselect all tabs
+            for btn in tab_buttons:
+                btn.content.controls[0].color = ft.colors.ON_SURFACE_VARIANT
+                btn.content.controls[1].visible = False
+                btn.update()
+            
             page.update()
 
         page.dialog = ft.AlertDialog(

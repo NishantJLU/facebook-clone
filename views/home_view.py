@@ -4,6 +4,8 @@ from components.composer import Composer
 from components.story_card import get_stories_row
 from components.post_card import PostCard
 
+from components.story_viewer import StoryViewer
+
 class HomeView(ft.Container):
     def __init__(self, db_manager: DatabaseManager):
         self.db_manager = db_manager
@@ -82,6 +84,16 @@ class HomeView(ft.Container):
             return
             
         active_user = self.db_manager.get_active_user()
+        
+        preview_image = ft.Image(
+            visible=False,
+            height=150,
+            fit=ft.ImageFit.COVER,
+            border_radius=8,
+            animate_scale=ft.animation.Animation(300, "decelerate"),
+            scale=0.8
+        )
+        
         post_input = ft.TextField(
             hint_text=f"What's on your mind, {active_user.get('name', 'User')}?",
             multiline=True,
@@ -93,13 +105,25 @@ class HomeView(ft.Container):
             autofocus=True
         )
         
+        def update_preview(e):
+            url = image_input.value.strip()
+            if url:
+                preview_image.src = url
+                preview_image.visible = True
+                preview_image.scale = 1
+            else:
+                preview_image.visible = False
+                preview_image.scale = 0.8
+            preview_image.update()
+
         image_input = ft.TextField(
             hint_text="Paste an Image URL (optional)...",
             border_radius=8,
             text_size=12,
             content_padding=10,
             bgcolor=ft.colors.SURFACE_VARIANT,
-            border_color=ft.colors.TRANSPARENT
+            border_color=ft.colors.TRANSPARENT,
+            on_change=update_preview
         )
         
         def submit_post(_):
@@ -138,6 +162,7 @@ class HomeView(ft.Container):
             content=ft.Container(
                 content=ft.Column([
                     post_input,
+                    preview_image,
                     ft.Divider(height=1, color=ft.colors.OUTLINE_VARIANT),
                     image_input
                 ], spacing=10, tight=True),
@@ -156,29 +181,19 @@ class HomeView(ft.Container):
         if not self.page:
             return
             
-        images = story.get("images", [])
-        if not images:
-            return
-            
         story_user = self.db_manager.get_user(story.get("userId"))
         
-        # Display the story image inside a beautiful modal dialog
+        def close_viewer():
+            self.page.dialog.open = False
+            self.page.update()
+
+        viewer = StoryViewer(story, story_user, on_close=close_viewer)
+        
         self.page.dialog = ft.AlertDialog(
-            title=ft.Row([
-                ft.CircleAvatar(foreground_image_url=story_user.get("avatar_url"), radius=16),
-                ft.Text(story_user.get("name"), weight=ft.FontWeight.BOLD, size=14)
-            ], spacing=8),
-            content=ft.Container(
-                content=ft.Image(src=images[0].get("url"), fit=ft.ImageFit.CONTAIN),
-                width=350,
-                height=450,
-                bgcolor=ft.colors.BLACK,
-                border_radius=8
-            ),
-            actions=[
-                ft.TextButton("Close", on_click=lambda _: setattr(self.page.dialog, 'open', False) or self.page.update())
-            ],
-            actions_alignment=ft.MainAxisAlignment.END
+            content=viewer,
+            content_padding=0,
+            inset_padding=0,
+            bgcolor=ft.colors.TRANSPARENT,
         )
         self.page.dialog.open = True
         self.page.update()

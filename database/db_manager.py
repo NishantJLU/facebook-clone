@@ -80,6 +80,10 @@ class DatabaseManager:
     def get_active_user(self):
         return self.get_user(self.active_user_id)
 
+    def set_active_user(self, user_id):
+        self.active_user_id = user_id
+        return self.get_active_user()
+
     # --- Post Helpers ---
     def get_posts(self):
         return self.data.get("posts", [])
@@ -99,7 +103,7 @@ class DatabaseManager:
             "create_at": "Just now",
             "content": content,
             "userId": self.active_user_id,
-            "reactions": {"like": 0, "love": 0, "haha": 0},
+            "reactions": {"like": 0, "love": 0, "haha": 0, "wow": 0, "sad": 0, "angry": 0},
             "permission": 1,
             "comments": []
         }
@@ -111,7 +115,7 @@ class DatabaseManager:
     def like_post(self, post_id, reaction_type="like", increment=True):
         post = self.get_post(post_id)
         if post:
-            reactions = post.setdefault("reactions", {"like": 0, "love": 0, "haha": 0})
+            reactions = post.setdefault("reactions", {"like": 0, "love": 0, "haha": 0, "wow": 0, "sad": 0, "angry": 0})
             current_val = reactions.get(reaction_type, 0)
             if increment:
                 reactions[reaction_type] = current_val + 1

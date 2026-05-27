@@ -48,31 +48,20 @@ class VideoPlayerCard(ft.Container):
         # 2. Description
         self.description = ft.Text(video_data.get("content", ""), size=13, color=ft.colors.ON_SURFACE)
         
-        # 3. Video Player Container (Mocked)
-        self.play_icon = ft.Icon(ft.icons.PLAY_ARROW, color=ft.colors.WHITE, size=48)
-        self.progress_bar = ft.ProgressBar(value=0, bgcolor=ft.colors.WHITE24, color=ft.colors.RED_400, visible=False)
-        self.video_cover = ft.Image(src=video_data.get("video", {}).get("cover_url"), fit=ft.ImageFit.COVER, expand=True)
+        # 3. Video Player (Native)
+        video_url = video_data.get("video", {}).get("video_url", "http://techslides.com/demos/sample-videos/small.mp4")
+        self.video_control = ft.Video(
+            expand=True,
+            playlist=[ft.VideoMedia(video_url)],
+            playlist_mode=ft.PlaylistMode.LOOP,
+            fill_color=ft.colors.BLACK,
+            aspect_ratio=16/9,
+            autoplay=False,
+            show_controls=True,
+        )
         
-        self.video_player = ft.Container(
-            content=ft.Stack([
-                self.video_cover,
-                # Black overlay
-                ft.Container(bgcolor=ft.colors.with_opacity(0.3, ft.colors.BLACK), expand=True),
-                # Play button overlay
-                ft.Container(
-                    content=self.play_icon,
-                    alignment=ft.alignment.center,
-                    on_click=self._toggle_play
-                ),
-                # Video progress slider (at the bottom)
-                ft.Container(
-                    content=self.progress_bar,
-                    alignment=ft.alignment.bottom_center,
-                    bottom=0,
-                    left=0,
-                    right=0
-                )
-            ]),
+        self.video_player_container = ft.Container(
+            content=self.video_control,
             height=220,
             border_radius=4,
             clip_behavior=ft.ClipBehavior.ANTI_ALIAS,
@@ -112,7 +101,7 @@ class VideoPlayerCard(ft.Container):
         self.content = ft.Column([
             self.header,
             self.description,
-            self.video_player,
+            self.video_player_container,
             self.counters,
             ft.Divider(height=1, color=ft.colors.OUTLINE_VARIANT),
             ft.Row([self.like_button, self.comment_button, ft.TextButton(
@@ -127,33 +116,6 @@ class VideoPlayerCard(ft.Container):
         self.follow_text.value = "Following" if self.video_data["isFollowed"] else "Follow"
         self.follow_text.color = ft.colors.ON_SURFACE_VARIANT if self.video_data["isFollowed"] else ft.colors.BLUE_ACCENT_400
         self.update()
-
-    def _toggle_play(self, e):
-        self.is_playing = not self.is_playing
-        if self.is_playing:
-            self.play_icon.name = ft.icons.PAUSE_CIRCLE_FILLED
-            self.progress_bar.visible = True
-            self.progress_bar.value = 0.1
-            self.update()
-            
-            # Simple simulation: let progress increase a bit
-            def simulate_play():
-                for i in range(2, 11):
-                    if not self.is_playing:
-                        break
-                    time.sleep(0.4)
-                    self.progress_bar.value = i / 10.0
-                    try:
-                        self.update()
-                    except:
-                        break
-            # Start simulated thread
-            import threading
-            threading.Thread(target=simulate_play, daemon=True).start()
-        else:
-            self.play_icon.name = ft.icons.PLAY_ARROW
-            self.progress_bar.visible = False
-            self.update()
 
     def _handle_like(self, e):
         self.is_liked = not self.is_liked
