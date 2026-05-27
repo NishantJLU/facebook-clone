@@ -4,29 +4,25 @@ A modern, responsive Facebook UI clone built entirely using the [Flet](https://f
 
 ## 🚀 Features
 
-- **Responsive Design:** Adapts from a centered phone mockup on desktop to a full-screen mobile experience.
-- **Real-time Search:** Instantly filter the home feed by post content or author name.
-- **Multi-View Navigation:**
-  - **Home:** Main feed with search, stories, and posts.
-  - **Watch:** Video feed simulation.
-  - **Groups:** Group discovery and management.
-  - **Profile:** User profile information and personal feed.
-  - **Notifications:** Activity and alerts.
-  - **Menu:** App settings and navigation shortcuts.
-- **High-Fidelity Components:**
-  - Story cards with interactive feel.
-  - Post composer and feed items.
-  - **Smooth Animations:** Posts feature fade-in and scale-in transitions using Flet's animation engine.
-  - Custom status bar and home indicator mockup.
-- **Theme Support:** Dynamic Dark/Light mode switching.
-- **Modular Architecture:** Clean separation of views, components, and database logic with `.env` configuration support.
+- **Responsive Design:** Adapts from a sleek phone mockup on desktop to a full-screen native experience on mobile.
+- **Advanced Navigation:** Full support for Home, Watch, Groups, Profile, Notifications, and Menu views.
+- **Interactive UI Components:**
+  - **Dynamic Story Viewer:** Active, timed stories with progress bars and smooth transitions.
+  - **Enhanced Post Interaction:** Long-press or hover to open the **Reaction Picker Panel** (Like, Love, Haha, Wow, Sad, Angry).
+  - **Marketplace:** Fully functional marketplace view with product category filtering and detailed product bottom sheets.
+  - **Native Video Player:** Integrated video playback in the Watch view using Flet's native video component.
+  - **Post Composer:** Real-time post creation with live image preview support.
+- **Real-time Search:** Global search functionality that filters users and posts instantly.
+- **Theme Support:** One-tap Dark/Light mode switching with Material 3 color consistency.
+- **Flet 0.85+ Optimized:** Fully updated to the latest Flet standards for maximum performance and compatibility.
 
 ## 🛠️ Technology Stack
 
-- **Language:** Python 3.x
-- **UI Framework:** [Flet](https://flet.dev/) (powered by Flutter)
-- **Database:** JSON-based local storage with automatic skeleton initialization.
-- **Configuration:** Environment-based setup via `.env`.
+- **Language:** Python 3.9+
+- **UI Framework:** [Flet](https://flet.dev/) (Flutter for Python)
+- **State Management:** Local state handling with cached views for smooth tab switching.
+- **Database:** JSON-based local management with modular `DatabaseManager` logic.
+- **CI/CD:** Automated Android APK builds via GitHub Actions.
 
 ## 📁 Project Structure
 
