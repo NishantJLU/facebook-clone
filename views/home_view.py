@@ -12,18 +12,18 @@ class HomeView(ft.Container):
         
         super().__init__(
             expand=True,
-            padding=ft.padding.only(left=8, right=8, top=4, bottom=4),
+            padding=ft.Padding.only(left=8, right=8, top=4, bottom=4),
         )
         
         # Search Bar
         self.search_field = ft.TextField(
             hint_text="Search posts...",
-            prefix_icon=ft.icons.SEARCH,
+            prefix_icon=ft.Icons.SEARCH,
             border_radius=20,
             text_size=13,
             content_padding=10,
-            bgcolor=ft.colors.SURFACE_VARIANT,
-            border_color=ft.colors.TRANSPARENT,
+            bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST,
+            border_color=ft.Colors.TRANSPARENT,
             on_change=self.refresh_feed
         )
         
@@ -55,10 +55,10 @@ class HomeView(ft.Container):
         )
         stories_container = ft.Container(
             content=stories_row,
-            bgcolor=ft.colors.SURFACE,
+            bgcolor=ft.Colors.SURFACE,
             padding=10,
             border_radius=8,
-            shadow=ft.BoxShadow(blur_radius=1, color=ft.colors.with_opacity(0.08, ft.colors.BLACK))
+            shadow=ft.BoxShadow(blur_radius=1, color=ft.Colors.with_opacity(0.08, ft.Colors.BLACK))
         )
         self.feed_column.controls.append(stories_container)
         
@@ -88,9 +88,9 @@ class HomeView(ft.Container):
         preview_image = ft.Image(
             visible=False,
             height=150,
-            fit=ft.ImageFit.COVER,
+            fit=ft.BoxFit.COVER,
             border_radius=8,
-            animate_scale=ft.animation.Animation(300, "decelerate"),
+            animate_scale=ft.Animation(300, "decelerate"),
             scale=0.8
         )
         
@@ -99,8 +99,8 @@ class HomeView(ft.Container):
             multiline=True,
             min_lines=3,
             max_lines=6,
-            border_color=ft.colors.TRANSPARENT,
-            bgcolor=ft.colors.TRANSPARENT,
+            border_color=ft.Colors.TRANSPARENT,
+            bgcolor=ft.Colors.TRANSPARENT,
             content_padding=0,
             autofocus=True
         )
@@ -121,8 +121,8 @@ class HomeView(ft.Container):
             border_radius=8,
             text_size=12,
             content_padding=10,
-            bgcolor=ft.colors.SURFACE_VARIANT,
-            border_color=ft.colors.TRANSPARENT,
+            bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST,
+            border_color=ft.Colors.TRANSPARENT,
             on_change=update_preview
         )
         
@@ -138,24 +138,24 @@ class HomeView(ft.Container):
             self.refresh_feed()
             self.page.snack_bar = ft.SnackBar(
                 content=ft.Text("Post published successfully!"),
-                bgcolor=ft.colors.GREEN_800
+                bgcolor=ft.Colors.GREEN_800
             )
             self.page.snack_bar.open = True
             self.page.update()
 
         self.page.dialog = ft.AlertDialog(
             title=ft.Row([
-                ft.CircleAvatar(foreground_image_url=active_user.get("avatar_url"), radius=18),
+                ft.CircleAvatar(foreground_image_src=active_user.get("avatar_url"), radius=18),
                 ft.Column([
                     ft.Text(active_user.get("name"), weight=ft.FontWeight.BOLD, size=14),
                     ft.Container(
                         content=ft.Row([
-                            ft.Icon(ft.icons.PUBLIC, size=10, color=ft.colors.ON_SURFACE_VARIANT),
-                            ft.Text("Public", size=10, color=ft.colors.ON_SURFACE_VARIANT)
+                            ft.Icon(ft.Icons.PUBLIC, size=10, color=ft.Colors.ON_SURFACE_VARIANT),
+                            ft.Text("Public", size=10, color=ft.Colors.ON_SURFACE_VARIANT)
                         ], spacing=3),
-                        border=ft.border.all(1, ft.colors.OUTLINE_VARIANT),
+                        border=ft.Border.all(1, ft.Colors.OUTLINE_VARIANT),
                         border_radius=4,
-                        padding=ft.padding.symmetric(2, 4)
+                        padding=ft.Padding.symmetric(vertical=2, horizontal=4)
                     )
                 ], spacing=2)
             ], spacing=8),
@@ -163,14 +163,14 @@ class HomeView(ft.Container):
                 content=ft.Column([
                     post_input,
                     preview_image,
-                    ft.Divider(height=1, color=ft.colors.OUTLINE_VARIANT),
+                    ft.Divider(height=1, color=ft.Colors.OUTLINE_VARIANT),
                     image_input
                 ], spacing=10, tight=True),
                 width=350,
             ),
             actions=[
                 ft.TextButton("Cancel", on_click=lambda _: setattr(self.page.dialog, 'open', False) or self.page.update()),
-                ft.ElevatedButton("Post", on_click=submit_post, bgcolor=ft.colors.BLUE_ACCENT_400, color=ft.colors.WHITE)
+                ft.Button("Post", on_click=submit_post, bgcolor=ft.Colors.BLUE_ACCENT_400, color=ft.Colors.WHITE)
             ],
             actions_alignment=ft.MainAxisAlignment.END
         )
@@ -193,7 +193,7 @@ class HomeView(ft.Container):
             content=viewer,
             content_padding=0,
             inset_padding=0,
-            bgcolor=ft.colors.TRANSPARENT,
+            bgcolor=ft.Colors.TRANSPARENT,
         )
         self.page.dialog.open = True
         self.page.update()
@@ -202,7 +202,7 @@ class HomeView(ft.Container):
         if self.page:
             self.page.snack_bar = ft.SnackBar(
                 content=ft.Text("Story Creation Feature coming soon!"),
-                bgcolor=ft.colors.BLUE_800
+                bgcolor=ft.Colors.BLUE_800
             )
             self.page.snack_bar.open = True
             self.page.update()

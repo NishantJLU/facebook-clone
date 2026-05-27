@@ -25,15 +25,15 @@ class SearchResultsView(ft.Container):
                 self.results_column.controls.append(
                     ft.Container(
                         content=ft.Row([
-                            ft.CircleAvatar(foreground_image_url=user.get("avatar_url"), radius=20),
+                            ft.CircleAvatar(foreground_image_src=user.get("avatar_url"), radius=20),
                             ft.Column([
                                 ft.Text(user.get("name"), weight=ft.FontWeight.BOLD),
-                                ft.Text(f"{user.get('live_in', 'Facebook')} User", size=12, color=ft.colors.ON_SURFACE_VARIANT)
+                                ft.Text(f"{user.get('live_in', 'Facebook')} User", size=12, color=ft.Colors.ON_SURFACE_VARIANT)
                             ], spacing=2),
-                            ft.ElevatedButton("Add Friend", icon=ft.icons.PERSON_ADD, scale=0.8)
+                            ft.Button("Add Friend", icon=ft.Icons.PERSON_ADD, scale=0.8)
                         ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
                         padding=10,
-                        bgcolor=ft.colors.SURFACE,
+                        bgcolor=ft.Colors.SURFACE,
                         border_radius=8
                     )
                 )
@@ -51,10 +51,10 @@ class SearchResultsView(ft.Container):
             self.results_column.controls.append(
                 ft.Container(
                     content=ft.Column([
-                        ft.Icon(ft.icons.SEARCH_OFF, size=50, color=ft.colors.ON_SURFACE_VARIANT),
-                        ft.Text(f"No results found for '{self.query}'", color=ft.colors.ON_SURFACE_VARIANT)
+                        ft.Icon(ft.Icons.SEARCH_OFF, size=50, color=ft.Colors.ON_SURFACE_VARIANT),
+                        ft.Text(f"No results found for '{self.query}'", color=ft.Colors.ON_SURFACE_VARIANT)
                     ], horizontal_alignment=ft.CrossAxisAlignment.CENTER),
-                    alignment=ft.alignment.center,
+                    alignment=ft.Alignment.CENTER,
                     expand=True
                 )
             )

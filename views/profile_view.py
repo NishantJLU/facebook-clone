@@ -8,7 +8,7 @@ class ProfileView(ft.Container):
         
         super().__init__(
             expand=True,
-            padding=ft.padding.only(left=0, right=0, top=0, bottom=4),
+            padding=ft.Padding.only(left=0, right=0, top=0, bottom=4),
         )
         
         self.scroll_column = ft.Column(
@@ -26,23 +26,23 @@ class ProfileView(ft.Container):
         active_user = self.db_manager.get_active_user()
         cover_url = active_user.get("cover_url", "https://cdn.pixabay.com/photo/2015/02/24/15/41/dog-647528__340.jpg")
         avatar_url = active_user.get("avatar_url", "")
-        name = active_user.get("name", "Hoàng Vũ")
+        name = active_user.get("name", "NishantJLU")
         sub_name = active_user.get("subName", "")
         intro = active_user.get("introTxt", "")
         
         # 1. Header with Cover and Overlapping Avatar
-        cover_img = ft.Image(src=cover_url, height=180, fit=ft.ImageFit.COVER, width=430)
+        cover_img = ft.Image(src=cover_url, height=180, fit=ft.BoxFit.COVER, width=430)
         
         avatar_circle = ft.Container(
             content=ft.CircleAvatar(
-                foreground_image_url=avatar_url,
+                foreground_image_src=avatar_url,
                 radius=50,
             ),
-            border=ft.border.all(4, ft.colors.SURFACE),
+            border=ft.Border.all(4, ft.Colors.SURFACE),
             border_radius=54,
             width=108,
             height=108,
-            alignment=ft.alignment.center
+            alignment=ft.Alignment.CENTER
         )
         
         header_stack = ft.Stack([
@@ -52,7 +52,7 @@ class ProfileView(ft.Container):
             ft.Container(
                 content=avatar_circle,
                 bottom=0,
-                alignment=ft.alignment.bottom_center,
+                alignment=ft.Alignment.BOTTOM_CENTER,
                 width=430,
                 height=108
             )
@@ -62,50 +62,50 @@ class ProfileView(ft.Container):
         
         # 2. User Name and Bio Info
         name_info = ft.Column([
-            ft.Text(name, size=20, weight=ft.FontWeight.BOLD, color=ft.colors.ON_SURFACE),
-            ft.Text(f"({sub_name})" if sub_name else "", size=12, color=ft.colors.ON_SURFACE_VARIANT) if sub_name else ft.Container(),
-            ft.Text(intro, size=13, italic=True, color=ft.colors.ON_SURFACE_VARIANT) if intro else ft.Container(),
+            ft.Text(name, size=20, weight=ft.FontWeight.BOLD, color=ft.Colors.ON_SURFACE),
+            ft.Text(f"({sub_name})" if sub_name else "", size=12, color=ft.Colors.ON_SURFACE_VARIANT) if sub_name else ft.Container(),
+            ft.Text(intro, size=13, italic=True, color=ft.Colors.ON_SURFACE_VARIANT) if intro else ft.Container(),
         ], horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=2, width=430)
-        self.scroll_column.controls.append(ft.Container(content=name_info, alignment=ft.alignment.center))
+        self.scroll_column.controls.append(ft.Container(content=name_info, alignment=ft.Alignment.CENTER))
         
         # 3. Action Buttons Row (Add to Story, Edit Profile)
         action_buttons = ft.Row([
-            ft.ElevatedButton(
+            ft.Button(
                 text="Add to Story",
-                icon=ft.icons.ADD,
-                bgcolor=ft.colors.BLUE_ACCENT_400,
-                color=ft.colors.WHITE,
+                icon=ft.Icons.ADD,
+                bgcolor=ft.Colors.BLUE_ACCENT_400,
+                color=ft.Colors.WHITE,
                 style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=6)),
                 expand=True,
                 on_click=lambda _: self._show_snack("Add to Story clicked!")
             ),
-            ft.ElevatedButton(
+            ft.Button(
                 text="Edit Profile",
-                icon=ft.icons.EDIT,
-                bgcolor=ft.colors.SURFACE_VARIANT,
-                color=ft.colors.ON_SURFACE,
+                icon=ft.Icons.EDIT,
+                bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST,
+                color=ft.Colors.ON_SURFACE,
                 style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=6)),
                 expand=True,
                 on_click=self._open_edit_profile_dialog
             ),
         ], spacing=10, width=410)
-        self.scroll_column.controls.append(ft.Container(content=action_buttons, padding=ft.padding.symmetric(horizontal=12)))
+        self.scroll_column.controls.append(ft.Container(content=action_buttons, padding=ft.Padding.symmetric(horizontal=12)))
         
-        self.scroll_column.controls.append(ft.Container(content=ft.Divider(height=1, color=ft.colors.OUTLINE_VARIANT), padding=ft.padding.symmetric(horizontal=12)))
+        self.scroll_column.controls.append(ft.Container(content=ft.Divider(height=1, color=ft.Colors.OUTLINE_VARIANT), padding=ft.Padding.symmetric(horizontal=12)))
         
         # 4. Details List (Live in, Work at, follower count, etc.)
         details = []
         if active_user.get("work_at"):
-            details.append(ft.Row([ft.Icon(ft.icons.WORK, size=16, color=ft.colors.ON_SURFACE_VARIANT), ft.Text(f"Works at {active_user.get('work_at')}", size=12)]))
+            details.append(ft.Row([ft.Icon(ft.Icons.WORK, size=16, color=ft.Colors.ON_SURFACE_VARIANT), ft.Text(f"Works at {active_user.get('work_at')}", size=12)]))
         if active_user.get("live_in"):
-            details.append(ft.Row([ft.Icon(ft.icons.HOME, size=16, color=ft.colors.ON_SURFACE_VARIANT), ft.Text(f"Lives in {active_user.get('live_in')}", size=12)]))
+            details.append(ft.Row([ft.Icon(ft.Icons.HOME, size=16, color=ft.Colors.ON_SURFACE_VARIANT), ft.Text(f"Lives in {active_user.get('live_in')}", size=12)]))
         if active_user.get("from"):
-            details.append(ft.Row([ft.Icon(ft.icons.LOCATION_ON, size=16, color=ft.colors.ON_SURFACE_VARIANT), ft.Text(f"From {active_user.get('from')}", size=12)]))
+            details.append(ft.Row([ft.Icon(ft.Icons.LOCATION_ON, size=16, color=ft.Colors.ON_SURFACE_VARIANT), ft.Text(f"From {active_user.get('from')}", size=12)]))
         if active_user.get("follower"):
-            details.append(ft.Row([ft.Icon(ft.icons.RSS_FEED, size=16, color=ft.colors.ON_SURFACE_VARIANT), ft.Text(f"Followed by {active_user.get('follower'):,} people", size=12)]))
+            details.append(ft.Row([ft.Icon(ft.Icons.RSS_FEED, size=16, color=ft.Colors.ON_SURFACE_VARIANT), ft.Text(f"Followed by {active_user.get('follower'):,} people", size=12)]))
             
         details_column = ft.Column(details, spacing=8)
-        self.scroll_column.controls.append(ft.Container(content=details_column, padding=ft.padding.symmetric(horizontal=16)))
+        self.scroll_column.controls.append(ft.Container(content=details_column, padding=ft.Padding.symmetric(horizontal=16)))
         
         # 5. Photos Row Grid (Simulate grid)
         photos = [
@@ -115,21 +115,21 @@ class ProfileView(ft.Container):
             "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg"
         ]
         
-        photo_images = [ft.Image(src=p, fit=ft.ImageFit.COVER, width=80, height=80, border_radius=6) for p in photos]
+        photo_images = [ft.Image(src=p, fit=ft.BoxFit.COVER, width=80, height=80, border_radius=6) for p in photos]
         photos_row = ft.Row(photo_images, spacing=10)
         photos_container = ft.Column([
             ft.Text("Photos", weight=ft.FontWeight.BOLD, size=14),
             photos_row
         ], spacing=6)
         
-        self.scroll_column.controls.append(ft.Container(content=photos_container, padding=ft.padding.symmetric(horizontal=16)))
-        self.scroll_column.controls.append(ft.Container(content=ft.Divider(height=1, color=ft.colors.OUTLINE_VARIANT), padding=ft.padding.symmetric(horizontal=12)))
+        self.scroll_column.controls.append(ft.Container(content=photos_container, padding=ft.Padding.symmetric(horizontal=16)))
+        self.scroll_column.controls.append(ft.Container(content=ft.Divider(height=1, color=ft.Colors.OUTLINE_VARIANT), padding=ft.Padding.symmetric(horizontal=12)))
         
         # 6. Own Posts
         self.scroll_column.controls.append(
             ft.Container(
                 content=ft.Text("My Posts", weight=ft.FontWeight.BOLD, size=14),
-                padding=ft.padding.symmetric(horizontal=16)
+                padding=ft.Padding.symmetric(horizontal=16)
             )
         )
         
@@ -139,8 +139,8 @@ class ProfileView(ft.Container):
         if not my_posts:
             self.scroll_column.controls.append(
                 ft.Container(
-                    content=ft.Text("You haven't posted anything yet.", italic=True, color=ft.colors.ON_SURFACE_VARIANT),
-                    alignment=ft.alignment.center,
+                    content=ft.Text("You haven't posted anything yet.", italic=True, color=ft.Colors.ON_SURFACE_VARIANT),
+                    alignment=ft.Alignment.CENTER,
                     padding=20
                 )
             )
@@ -148,14 +148,14 @@ class ProfileView(ft.Container):
             for mp in my_posts:
                 post_card = PostCard(mp, self.db_manager, on_post_updated=self.refresh_profile)
                 # Wrap inside a container to give padding
-                self.scroll_column.controls.append(ft.Container(content=post_card, padding=ft.padding.symmetric(horizontal=8)))
+                self.scroll_column.controls.append(ft.Container(content=post_card, padding=ft.Padding.symmetric(horizontal=8)))
                 
         if self.page:
             self.update()
 
     def _show_snack(self, message):
         if self.page:
-            self.page.snack_bar = ft.SnackBar(content=ft.Text(message), bgcolor=ft.colors.BLUE_800)
+            self.page.snack_bar = ft.SnackBar(content=ft.Text(message), bgcolor=ft.Colors.BLUE_800)
             self.page.snack_bar.open = True
             self.page.update()
 
@@ -191,7 +191,7 @@ class ProfileView(ft.Container):
             ),
             actions=[
                 ft.TextButton("Cancel", on_click=lambda _: setattr(self.page.dialog, 'open', False) or self.page.update()),
-                ft.ElevatedButton("Save", on_click=save_profile, bgcolor=ft.colors.BLUE_ACCENT_400, color=ft.colors.WHITE)
+                ft.Button("Save", on_click=save_profile, bgcolor=ft.Colors.BLUE_ACCENT_400, color=ft.Colors.WHITE)
             ],
             actions_alignment=ft.MainAxisAlignment.END
         )

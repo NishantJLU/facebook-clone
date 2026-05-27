@@ -15,7 +15,7 @@ class StoryViewer(ft.Container):
         
         self.width = 350
         self.height = 600
-        self.bgcolor = ft.colors.BLACK
+        self.bgcolor = ft.Colors.BLACK
         self.border_radius = 16
         self.clip_behavior = ft.ClipBehavior.ANTI_ALIAS
         
@@ -25,8 +25,8 @@ class StoryViewer(ft.Container):
             self.progress_bars.append(
                 ft.ProgressBar(
                     value=0,
-                    bgcolor=ft.colors.with_opacity(0.3, ft.colors.WHITE),
-                    color=ft.colors.WHITE,
+                    bgcolor=ft.Colors.with_opacity(0.3, ft.Colors.WHITE),
+                    color=ft.Colors.WHITE,
                     height=2,
                     expand=True
                 )
@@ -37,49 +37,51 @@ class StoryViewer(ft.Container):
         # Image Control
         self.image_control = ft.Image(
             src=self.images[self.current_index].get("url"),
-            fit=ft.ImageFit.COVER,
+            fit=ft.BoxFit.COVER,
             expand=True
         )
         
         # Header
         self.header = ft.Row([
             ft.Row([
-                ft.CircleAvatar(foreground_image_url=user.get("avatar_url"), radius=16),
+                ft.CircleAvatar(foreground_image_src=user.get("avatar_url"), radius=16),
                 ft.Column([
-                    ft.Text(user.get("name"), weight=ft.FontWeight.BOLD, size=14, color=ft.colors.WHITE),
-                    ft.Text(self.images[self.current_index].get("create_at", "Just now"), size=11, color=ft.colors.WHITE70),
+                    ft.Text(user.get("name"), weight=ft.FontWeight.BOLD, size=14, color=ft.Colors.WHITE),
+                    ft.Text(self.images[self.current_index].get("create_at", "Just now"), size=11, color=ft.Colors.WHITE70),
                 ], spacing=0)
             ], spacing=8),
-            ft.IconButton(ft.icons.CLOSE, icon_color=ft.colors.WHITE, on_click=self._close)
+            ft.IconButton(ft.Icons.CLOSE, icon_color=ft.Colors.WHITE, on_click=self._close)
         ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN)
         
         # Navigation Areas
         self.left_nav = ft.GestureDetector(
-            content=ft.Container(expand=True, bgcolor=ft.colors.TRANSPARENT),
-            on_tap=self._prev_story
+            content=ft.Container(expand=True, bgcolor=ft.Colors.TRANSPARENT),
+            on_tap=self._prev_story,
+            expand=True
         )
         self.right_nav = ft.GestureDetector(
-            content=ft.Container(expand=True, bgcolor=ft.colors.TRANSPARENT),
-            on_tap=self._next_story
+            content=ft.Container(expand=True, bgcolor=ft.Colors.TRANSPARENT),
+            on_tap=self._next_story,
+            expand=True
         )
         
         self.content = ft.Stack([
             self.image_control,
             ft.Container(
                 content=ft.Column([
-                    ft.Container(self.progress_row, padding=ft.padding.only(top=10, left=10, right=10)),
+                    ft.Container(self.progress_row, padding=ft.Padding.only(top=10, left=10, right=10)),
                     ft.Container(self.header, padding=10),
                 ], spacing=0),
                 gradient=ft.LinearGradient(
-                    begin=ft.alignment.top_center,
-                    end=ft.alignment.bottom_center,
-                    colors=[ft.colors.with_opacity(0.6, ft.colors.BLACK), ft.colors.TRANSPARENT],
+                    begin=ft.Alignment.TOP_CENTER,
+                    end=ft.Alignment.BOTTOM_CENTER,
+                    colors=[ft.Colors.with_opacity(0.6, ft.Colors.BLACK), ft.Colors.TRANSPARENT],
                     stops=[0, 0.4]
                 )
             ),
             ft.Row([
-                ft.Expanded(child=self.left_nav),
-                ft.Expanded(child=self.right_nav),
+                self.left_nav,
+                self.right_nav,
             ], expand=True)
         ])
         

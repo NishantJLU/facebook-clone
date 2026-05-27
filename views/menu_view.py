@@ -10,7 +10,7 @@ class MenuView(ft.Container):
         
         super().__init__(
             expand=True,
-            padding=ft.padding.only(left=12, right=12, top=4, bottom=4),
+            padding=ft.Padding.only(left=12, right=12, top=4, bottom=4),
         )
         
         self.scroll_column = ft.Column(
@@ -34,8 +34,8 @@ class MenuView(ft.Container):
             ft.Row([
                 ft.Text("Menu", size=20, weight=ft.FontWeight.BOLD),
                 ft.Row([
-                    ft.IconButton(ft.icons.SETTINGS, icon_size=18),
-                    ft.IconButton(ft.icons.SEARCH, icon_size=18)
+                    ft.IconButton(ft.Icons.SETTINGS, icon_size=18),
+                    ft.IconButton(ft.Icons.SEARCH, icon_size=18)
                 ], spacing=4)
             ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN)
         )
@@ -43,16 +43,16 @@ class MenuView(ft.Container):
         # 2. Profile Card
         profile_card = ft.Container(
             content=ft.Row([
-                ft.CircleAvatar(foreground_image_url=avatar_url, radius=18),
+                ft.CircleAvatar(foreground_image_src=avatar_url, radius=18),
                 ft.Column([
                     ft.Text(name, weight=ft.FontWeight.BOLD, size=13),
-                    ft.Text("See your profile", size=11, color=ft.colors.ON_SURFACE_VARIANT)
+                    ft.Text("See your profile", size=11, color=ft.Colors.ON_SURFACE_VARIANT)
                 ], spacing=2)
             ], spacing=10),
             padding=10,
             border_radius=8,
-            bgcolor=ft.colors.SURFACE,
-            shadow=ft.BoxShadow(blur_radius=1, color=ft.colors.with_opacity(0.08, ft.colors.BLACK)),
+            bgcolor=ft.Colors.SURFACE,
+            shadow=ft.BoxShadow(blur_radius=1, color=ft.Colors.with_opacity(0.08, ft.Colors.BLACK)),
             on_click=self._handle_profile_click
         )
         self.scroll_column.controls.append(profile_card)
@@ -66,10 +66,10 @@ class MenuView(ft.Container):
             account_items.append(
                 ft.Container(
                     content=ft.Row([
-                        ft.CircleAvatar(foreground_image_url=user.get("avatar_url"), radius=14),
+                        ft.CircleAvatar(foreground_image_src=user.get("avatar_url"), radius=14),
                         ft.Text(user.get("name"), size=12, weight=ft.FontWeight.W_500),
                     ], spacing=8),
-                    padding=ft.padding.symmetric(8, 12),
+                    padding=ft.Padding.symmetric(vertical=8, horizontal=12),
                     on_click=lambda e, uid=user.get("id"): self._switch_account(uid)
                 )
             )
@@ -82,21 +82,21 @@ class MenuView(ft.Container):
                 ], spacing=8),
                 padding=10,
                 border_radius=8,
-                bgcolor=ft.colors.SURFACE,
-                shadow=ft.BoxShadow(blur_radius=1, color=ft.colors.with_opacity(0.08, ft.colors.BLACK)),
+                bgcolor=ft.Colors.SURFACE,
+                shadow=ft.BoxShadow(blur_radius=1, color=ft.Colors.with_opacity(0.08, ft.Colors.BLACK)),
             )
             self.scroll_column.controls.append(account_switcher)
         
         # 3. Grid of shortcuts
         shortcuts = [
-            ("Marketplace", ft.icons.STOREFRONT, ft.colors.BLUE_400),
-            ("Groups", ft.icons.GROUP, ft.colors.TEAL_400),
-            ("Pages", ft.icons.FLAG, ft.colors.ORANGE_400),
-            ("Gaming", ft.icons.SPORTS_ESPORTS, ft.colors.CYAN_400),
-            ("Memories", ft.icons.HISTORY, ft.colors.AMBER_400),
-            ("Saved", ft.icons.BOOKMARK, ft.colors.PURPLE_400),
-            ("Events", ft.icons.EVENT, ft.colors.RED_400),
-            ("Feeds", ft.icons.DYNAMIC_FEED, ft.colors.LIGHT_BLUE_400)
+            ("Marketplace", ft.Icons.STOREFRONT, ft.Colors.BLUE_400),
+            ("Groups", ft.Icons.GROUP, ft.Colors.TEAL_400),
+            ("Pages", ft.Icons.FLAG, ft.Colors.ORANGE_400),
+            ("Gaming", ft.Icons.SPORTS_ESPORTS, ft.Colors.CYAN_400),
+            ("Memories", ft.Icons.HISTORY, ft.Colors.AMBER_400),
+            ("Saved", ft.Icons.BOOKMARK, ft.Colors.PURPLE_400),
+            ("Events", ft.Icons.EVENT, ft.Colors.RED_400),
+            ("Feeds", ft.Icons.DYNAMIC_FEED, ft.Colors.LIGHT_BLUE_400)
         ]
         
         grid_items = []
@@ -107,12 +107,12 @@ class MenuView(ft.Container):
                         ft.Icon(icon_name, color=color, size=20),
                         ft.Text(label, size=11, weight=ft.FontWeight.W_500)
                     ], spacing=6, alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
-                    bgcolor=ft.colors.SURFACE,
+                    bgcolor=ft.Colors.SURFACE,
                     border_radius=8,
                     padding=10,
                     width=90,
                     height=70,
-                    shadow=ft.BoxShadow(blur_radius=1, color=ft.colors.with_opacity(0.08, ft.colors.BLACK)),
+                    shadow=ft.BoxShadow(blur_radius=1, color=ft.Colors.with_opacity(0.08, ft.Colors.BLACK)),
                     on_click=lambda e, l=label: self._handle_shortcut_click(l)
                 )
             )
@@ -138,7 +138,7 @@ class MenuView(ft.Container):
         settings_section = ft.Column([
             ft.ExpansionTile(
                 title=ft.Text("Help & Support", size=13, weight=ft.FontWeight.W_600),
-                leading=ft.Icon(ft.icons.HELP_OUTLINE, size=18),
+                leading=ft.Icon(ft.Icons.HELP_OUTLINE, size=18),
                 controls=[
                     ft.ListTile(title=ft.Text("Help Center", size=12), on_click=lambda _: self._show_snack("Opening Help Center...")),
                     ft.ListTile(title=ft.Text("Support Inbox", size=12), on_click=lambda _: self._show_snack("Opening Support Inbox..."))
@@ -146,7 +146,7 @@ class MenuView(ft.Container):
             ),
             ft.ExpansionTile(
                 title=ft.Text("Settings & Privacy", size=13, weight=ft.FontWeight.W_600),
-                leading=ft.Icon(ft.icons.SETTINGS_OUTLINED, size=18),
+                leading=ft.Icon(ft.Icons.SETTINGS_OUTLINED, size=18),
                 controls=[
                     ft.ListTile(title=ft.Text("Settings", size=12), on_click=lambda _: self._show_snack("Opening Settings...")),
                     # Dark Mode toggle row
@@ -166,13 +166,13 @@ class MenuView(ft.Container):
         # 5. Logout Button
         logout_btn = ft.Container(
             content=ft.Row([
-                ft.Icon(ft.icons.LOGOUT, color=ft.colors.RED_400, size=16),
-                ft.Text("Log Out", size=13, weight=ft.FontWeight.BOLD, color=ft.colors.RED_400)
+                ft.Icon(ft.Icons.LOGOUT, color=ft.Colors.RED_400, size=16),
+                ft.Text("Log Out", size=13, weight=ft.FontWeight.BOLD, color=ft.Colors.RED_400)
             ], alignment=ft.MainAxisAlignment.CENTER),
             padding=10,
             border_radius=8,
-            bgcolor=ft.colors.SURFACE,
-            shadow=ft.BoxShadow(blur_radius=1, color=ft.colors.with_opacity(0.08, ft.colors.BLACK)),
+            bgcolor=ft.Colors.SURFACE,
+            shadow=ft.BoxShadow(blur_radius=1, color=ft.Colors.with_opacity(0.08, ft.Colors.BLACK)),
             on_click=lambda _: self._show_snack("Logged out successfully (Mock)")
         )
         self.scroll_column.controls.append(logout_btn)
@@ -205,7 +205,7 @@ class MenuView(ft.Container):
 
     def _show_snack(self, message):
         if self.page:
-            self.page.snack_bar = ft.SnackBar(content=ft.Text(message), bgcolor=ft.colors.BLUE_800)
+            self.page.snack_bar = ft.SnackBar(content=ft.Text(message), bgcolor=ft.Colors.BLUE_800)
             self.page.snack_bar.open = True
             self.page.update()
 

@@ -7,7 +7,7 @@ class NotificationsView(ft.Container):
         
         super().__init__(
             expand=True,
-            padding=ft.padding.only(left=8, right=8, top=4, bottom=4),
+            padding=ft.Padding.only(left=8, right=8, top=4, bottom=4),
         )
         
         self.scroll_column = ft.Column(
@@ -26,7 +26,7 @@ class NotificationsView(ft.Container):
         self.scroll_column.controls.append(
             ft.Row([
                 ft.Text("Notifications", size=20, weight=ft.FontWeight.BOLD),
-                ft.IconButton(ft.icons.SEARCH, icon_size=18)
+                ft.IconButton(ft.Icons.SEARCH, icon_size=18)
             ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN)
         )
         
@@ -34,8 +34,8 @@ class NotificationsView(ft.Container):
         if not notifications:
             self.scroll_column.controls.append(
                 ft.Container(
-                    content=ft.Text("You have no notifications.", italic=True, color=ft.colors.ON_SURFACE_VARIANT),
-                    alignment=ft.alignment.center,
+                    content=ft.Text("You have no notifications.", italic=True, color=ft.Colors.ON_SURFACE_VARIANT),
+                    alignment=ft.Alignment.CENTER,
                     padding=40
                 )
             )
@@ -59,18 +59,18 @@ class NotificationsView(ft.Container):
                 group = next((g for g in groups if g.get("id") == group_id), None)
                 group_name = group.get("name", "Group") if group else "Group"
                 notif_text = f"{sender_name} posted in the group {group_name}."
-                icon_name = ft.icons.GROUP
-                icon_color = ft.colors.BLUE_400
+                icon_name = ft.Icons.GROUP
+                icon_color = ft.Colors.BLUE_400
             elif notif_type == 2:
                 # Comment
                 notif_text = f"{sender_name} commented on your post."
-                icon_name = ft.icons.COMMENT
-                icon_color = ft.colors.GREEN_400
+                icon_name = ft.Icons.COMMENT
+                icon_color = ft.Colors.GREEN_400
             elif notif_type == 3:
                 # Friend request
                 notif_text = f"{sender_name} sent you a friend request."
-                icon_name = ft.icons.PERSON_ADD
-                icon_color = ft.colors.PURPLE_400
+                icon_name = ft.Icons.PERSON_ADD
+                icon_color = ft.Colors.PURPLE_400
                 
                 # Render Accept/Decline action buttons
                 notif_id = notif.get("id")
@@ -78,8 +78,8 @@ class NotificationsView(ft.Container):
             else:
                 # Standard like
                 notif_text = f"{sender_name} liked your photo."
-                icon_name = ft.icons.THUMB_UP
-                icon_color = ft.colors.BLUE_ACCENT_400
+                icon_name = ft.Icons.THUMB_UP
+                icon_color = ft.Colors.BLUE_ACCENT_400
 
             # Render Notification Card
             notif_card = self._build_notif_card(notif, sender_avatar, notif_text, icon_name, icon_color, action_buttons)
@@ -96,23 +96,23 @@ class NotificationsView(ft.Container):
             width=8,
             height=8,
             border_radius=4,
-            bgcolor=ft.colors.BLUE_ACCENT_400,
-            alignment=ft.alignment.center
+            bgcolor=ft.Colors.BLUE_ACCENT_400,
+            alignment=ft.Alignment.CENTER
         ) if not is_seen else ft.Container()
         
         card = ft.Container(
-            bgcolor=ft.colors.with_opacity(0.06, ft.colors.BLUE_ACCENT_100) if not is_seen else ft.colors.SURFACE,
+            bgcolor=ft.Colors.with_opacity(0.06, ft.Colors.BLUE_ACCENT_100) if not is_seen else ft.Colors.SURFACE,
             padding=10,
             border_radius=8,
-            shadow=ft.BoxShadow(blur_radius=1, color=ft.colors.with_opacity(0.08, ft.colors.BLACK)),
+            shadow=ft.BoxShadow(blur_radius=1, color=ft.Colors.with_opacity(0.08, ft.Colors.BLACK)),
             on_click=lambda e, n=notif: self._mark_as_read(n),
         )
         
         # Avatar with overlapping small type icon
         avatar_stack = ft.Stack([
-            ft.CircleAvatar(foreground_image_url=avatar_url, radius=20),
+            ft.CircleAvatar(foreground_image_src=avatar_url, radius=20),
             ft.Container(
-                content=ft.Icon(icon_name, size=10, color=ft.colors.WHITE),
+                content=ft.Icon(icon_name, size=10, color=ft.Colors.WHITE),
                 bgcolor=icon_color,
                 shape=ft.BoxShape.CIRCLE,
                 padding=2,
@@ -125,12 +125,10 @@ class NotificationsView(ft.Container):
         body = ft.Column([
             ft.Row([
                 avatar_stack,
-                ft.Expanded(
-                    child=ft.Column([
-                        ft.Text(text, size=12, color=ft.colors.ON_SURFACE, weight=ft.FontWeight.W_500 if not is_seen else ft.FontWeight.NORMAL),
-                        ft.Text(notif.get("create_at", "Just now"), size=10, color=ft.colors.ON_SURFACE_VARIANT)
-                    ], spacing=2)
-                ),
+                ft.Column([
+                    ft.Text(text, size=12, color=ft.Colors.ON_SURFACE, weight=ft.FontWeight.W_500 if not is_seen else ft.FontWeight.NORMAL),
+                    ft.Text(notif.get("create_at", "Just now"), size=10, color=ft.Colors.ON_SURFACE_VARIANT)
+                ], spacing=2, expand=True),
                 blue_dot
             ], spacing=10, vertical_alignment=ft.CrossAxisAlignment.CENTER),
         ], spacing=4)
@@ -139,7 +137,7 @@ class NotificationsView(ft.Container):
             body.controls.append(
                 ft.Container(
                     content=action_buttons,
-                    padding=ft.padding.only(left=50)
+                    padding=ft.Padding.only(left=50)
                 )
             )
             
@@ -153,7 +151,7 @@ class NotificationsView(ft.Container):
         def accept_request(_):
             self.db_manager.accept_friend_request(notif_id)
             buttons_row.controls.clear()
-            buttons_row.controls.append(ft.Text("Friends", color=ft.colors.ON_SURFACE_VARIANT, size=11, italic=True))
+            buttons_row.controls.append(ft.Text("Friends", color=ft.Colors.ON_SURFACE_VARIANT, size=11, italic=True))
             buttons_row.update()
             self._show_snack("Friend request accepted!")
             
@@ -169,19 +167,19 @@ class NotificationsView(ft.Container):
             self._show_snack("Friend request declined.")
 
         buttons_row.controls.extend([
-            ft.ElevatedButton(
+            ft.Button(
                 text="Confirm", 
                 on_click=accept_request, 
-                bgcolor=ft.colors.BLUE_ACCENT_400, 
-                color=ft.colors.WHITE,
+                bgcolor=ft.Colors.BLUE_ACCENT_400, 
+                color=ft.Colors.WHITE,
                 style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=6)),
                 height=26
             ),
-            ft.ElevatedButton(
+            ft.Button(
                 text="Delete", 
                 on_click=decline_request, 
-                bgcolor=ft.colors.SURFACE_VARIANT, 
-                color=ft.colors.ON_SURFACE,
+                bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST, 
+                color=ft.Colors.ON_SURFACE,
                 style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=6)),
                 height=26
             )
@@ -197,7 +195,7 @@ class NotificationsView(ft.Container):
 
     def _show_snack(self, message):
         if self.page:
-            self.page.snack_bar = ft.SnackBar(content=ft.Text(message), bgcolor=ft.colors.BLUE_800)
+            self.page.snack_bar = ft.SnackBar(content=ft.Text(message), bgcolor=ft.Colors.BLUE_800)
             self.page.snack_bar.open = True
             self.page.update()
 

@@ -19,7 +19,7 @@ class DatabaseManager:
         # Prioritize env variable, then parameter, then default
         self.db_path = os.getenv("DB_PATH", db_path or "database/db.json")
         self.data = {}
-        self.active_user_id = 1  # Default to "Hoàng Vũ"
+        self.active_user_id = 1  # Default to "NishantJLU"
         self.load_db()
         self._initialized = True
 
@@ -41,7 +41,7 @@ class DatabaseManager:
         """Initialize a minimal valid database structure if missing or empty."""
         self.data = {
             "users": [
-                {"id": 1, "name": "Hoàng Vũ", "avatar_url": "https://i.pravatar.cc/150?u=1"}
+                {"id": 1, "name": "NishantJLU", "avatar_url": "https://i.pravatar.cc/150?u=1"}
             ],
             "posts": [],
             "stories": [],

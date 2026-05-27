@@ -10,7 +10,7 @@ class GroupsView(ft.Container):
         
         super().__init__(
             expand=True,
-            padding=ft.padding.only(left=8, right=8, top=4, bottom=4),
+            padding=ft.Padding.only(left=8, right=8, top=4, bottom=4),
         )
         
         # Scrollable View
@@ -30,14 +30,14 @@ class GroupsView(ft.Container):
         search_field = ft.TextField(
             hint_text="Search groups...",
             border_radius=20,
-            content_padding=ft.padding.symmetric(0, 16),
+            content_padding=ft.Padding.symmetric(vertical=0, horizontal=16),
             height=36,
             text_size=13,
             prefix_icon=ft.icons.SEARCH,
             on_change=self._handle_search,
-            bgcolor=ft.colors.SURFACE_VARIANT,
-            border_color=ft.colors.TRANSPARENT,
-            hint_style=ft.TextStyle(color=ft.colors.ON_SURFACE_VARIANT),
+            bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST,
+            border_color=ft.Colors.TRANSPARENT,
+            hint_style=ft.TextStyle(color=ft.Colors.ON_SURFACE_VARIANT),
         )
         
         self.scroll_column.controls.append(
@@ -53,22 +53,22 @@ class GroupsView(ft.Container):
         action_buttons = ft.Row([
             ft.Container(
                 content=ft.Text("Your Groups", size=12, weight=ft.FontWeight.W_600),
-                bgcolor=ft.colors.SURFACE_VARIANT,
-                padding=ft.padding.symmetric(8, 12),
+                bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST,
+                padding=ft.Padding.symmetric(vertical=8, horizontal=12),
                 border_radius=15,
                 on_click=lambda _: self._show_snack("Viewing Your Groups")
             ),
             ft.Container(
                 content=ft.Text("Discover", size=12, weight=ft.FontWeight.W_600),
-                bgcolor=ft.colors.SURFACE_VARIANT,
-                padding=ft.padding.symmetric(8, 12),
+                bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST,
+                padding=ft.Padding.symmetric(vertical=8, horizontal=12),
                 border_radius=15,
                 on_click=lambda _: self._show_snack("Opening Group Discovery")
             ),
             ft.Container(
                 content=ft.Text("+ Create", size=12, weight=ft.FontWeight.W_600),
-                bgcolor=ft.colors.SURFACE_VARIANT,
-                padding=ft.padding.symmetric(8, 12),
+                bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST,
+                padding=ft.Padding.symmetric(vertical=8, horizontal=12),
                 border_radius=15,
                 on_click=self._open_create_group_dialog
             ),
@@ -85,12 +85,12 @@ class GroupsView(ft.Container):
             ft.Container(
                 content=ft.Column([
                     ft.Container(
-                        content=ft.Icon(ft.icons.ALL_INCLUSIVE, color=ft.colors.WHITE if all_active else ft.colors.BLUE_500),
-                        bgcolor=ft.colors.BLUE_500 if all_active else ft.colors.SURFACE_VARIANT,
+                        content=ft.Icon(ft.icons.ALL_INCLUSIVE, color=ft.Colors.WHITE if all_active else ft.Colors.BLUE_500),
+                        bgcolor=ft.Colors.BLUE_500 if all_active else ft.Colors.SURFACE_CONTAINER_HIGHEST,
                         width=44,
                         height=44,
                         border_radius=22,
-                        alignment=ft.alignment.center
+                        alignment=ft.Alignment.CENTER
                     ),
                     ft.Text("All", size=10, weight=ft.FontWeight.BOLD if all_active else ft.FontWeight.NORMAL)
                 ], alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=4),
@@ -105,8 +105,8 @@ class GroupsView(ft.Container):
                 ft.Container(
                     content=ft.Column([
                         ft.Container(
-                            content=ft.Image(src=cat.get("avatar_url"), fit=ft.ImageFit.COVER, width=44, height=44, border_radius=22),
-                            border=ft.border.all(2, ft.colors.BLUE_ACCENT_400) if is_active else None,
+                            content=ft.Image(src=cat.get("avatar_url"), fit=ft.BoxFit.COVER, width=44, height=44, border_radius=22),
+                            border=ft.Border.all(2, ft.Colors.BLUE_ACCENT_400) if is_active else None,
                             border_radius=22,
                         ),
                         ft.Text(cat.get("name"), size=10, weight=ft.FontWeight.BOLD if is_active else ft.FontWeight.NORMAL)
@@ -117,11 +117,11 @@ class GroupsView(ft.Container):
             
         categories_container = ft.Container(
             content=ft.Row(category_controls, scroll=ft.ScrollMode.ADAPTIVE, spacing=16),
-            padding=ft.padding.symmetric(vertical=4)
+            padding=ft.Padding.symmetric(vertical=4)
         )
         self.scroll_column.controls.append(categories_container)
         
-        self.scroll_column.controls.append(ft.Divider(height=1, color=ft.colors.OUTLINE_VARIANT))
+        self.scroll_column.controls.append(ft.Divider(height=1, color=ft.Colors.OUTLINE_VARIANT))
         self.scroll_column.controls.append(ft.Text("Recent Activity", weight=ft.FontWeight.BOLD, size=14))
         
         # 4. Group Feed List
@@ -150,8 +150,8 @@ class GroupsView(ft.Container):
         if not filtered_posts:
             self.scroll_column.controls.append(
                 ft.Container(
-                    content=ft.Text("No group posts found matching filters.", italic=True, color=ft.colors.ON_SURFACE_VARIANT),
-                    alignment=ft.alignment.center,
+                    content=ft.Text("No group posts found matching filters.", italic=True, color=ft.Colors.ON_SURFACE_VARIANT),
+                    alignment=ft.Alignment.CENTER,
                     padding=40
                 )
             )
@@ -173,7 +173,7 @@ class GroupsView(ft.Container):
 
     def _show_snack(self, message):
         if self.page:
-            self.page.snack_bar = ft.SnackBar(content=ft.Text(message), bgcolor=ft.colors.BLUE_800)
+            self.page.snack_bar = ft.SnackBar(content=ft.Text(message), bgcolor=ft.Colors.BLUE_800)
             self.page.snack_bar.open = True
             self.page.update()
 
@@ -213,7 +213,7 @@ class GroupsView(ft.Container):
             content=ft.Container(content=group_name_input, width=300, tight=True),
             actions=[
                 ft.TextButton("Cancel", on_click=lambda _: setattr(self.page.dialog, 'open', False) or self.page.update()),
-                ft.ElevatedButton("Create", on_click=submit_group, bgcolor=ft.colors.BLUE_ACCENT_400, color=ft.colors.WHITE)
+                ft.Button("Create", on_click=submit_group, bgcolor=ft.Colors.BLUE_ACCENT_400, color=ft.Colors.WHITE)
             ],
             actions_alignment=ft.MainAxisAlignment.END
         )

@@ -9,60 +9,59 @@ class Composer(ft.Container):
         avatar_url = active_user.get("avatar_url", "") if active_user else ""
         
         super().__init__(
-            bgcolor=ft.colors.SURFACE,
+            bgcolor=ft.Colors.SURFACE,
             padding=12,
             border_radius=8,
-            shadow=ft.BoxShadow(blur_radius=1, color=ft.colors.with_opacity(0.08, ft.colors.BLACK)),
+            shadow=ft.BoxShadow(blur_radius=1, color=ft.Colors.with_opacity(0.08, ft.Colors.BLACK)),
         )
         
         self.content = ft.Column([
             # Top row: Avatar + input text trigger
             ft.Row([
                 ft.CircleAvatar(
-                    foreground_image_url=avatar_url,
+                    foreground_image_src=avatar_url,
                     radius=20
                 ),
-                ft.Expanded(
-                    child=ft.Container(
-                        content=ft.Text(
-                            "What's on your mind?",
-                            color=ft.colors.ON_SURFACE_VARIANT,
-                            size=14
-                        ),
-                        bgcolor=ft.colors.SURFACE_VARIANT,
-                        border_radius=20,
-                        padding=ft.padding.symmetric(10, 16),
-                        on_click=on_write_post,
-                        alignment=ft.alignment.center_left,
-                    )
+                ft.Container(
+                    content=ft.Text(
+                        "What's on your mind?",
+                        color=ft.Colors.ON_SURFACE_VARIANT,
+                        size=14
+                    ),
+                    bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST,
+                    border_radius=20,
+                    padding=ft.Padding.symmetric(vertical=10, horizontal=16),
+                    on_click=on_write_post,
+                    alignment=ft.Alignment.CENTER_LEFT,
+                    expand=True
                 )
             ], spacing=10),
             
-            ft.Divider(height=1, color=ft.colors.OUTLINE_VARIANT),
+            ft.Divider(height=1, color=ft.Colors.OUTLINE_VARIANT),
             
             # Bottom row: Action Buttons (Live, Photo, Feeling/Activity)
             ft.Row([
                 # Live Video
                 ft.TextButton(
                     content=ft.Row([
-                        ft.Icon(ft.icons.VIDEOCAM, color=ft.colors.RED_400, size=18),
-                        ft.Text("Live", size=12, weight=ft.FontWeight.W_500, color=ft.colors.ON_SURFACE)
+                        ft.Icon(ft.Icons.VIDEOCAM, color=ft.Colors.RED_400, size=18),
+                        ft.Text("Live", size=12, weight=ft.FontWeight.W_500, color=ft.Colors.ON_SURFACE)
                     ], spacing=4),
                     on_click=lambda _: self.show_mock_alert("Live Streaming feature is starting soon!")
                 ),
                 # Photo/Video
                 ft.TextButton(
                     content=ft.Row([
-                        ft.Icon(ft.icons.PHOTO_LIBRARY, color=ft.colors.GREEN_400, size=18),
-                        ft.Text("Photo", size=12, weight=ft.FontWeight.W_500, color=ft.colors.ON_SURFACE)
+                        ft.Icon(ft.Icons.PHOTO_LIBRARY, color=ft.Colors.GREEN_400, size=18),
+                        ft.Text("Photo", size=12, weight=ft.FontWeight.W_500, color=ft.Colors.ON_SURFACE)
                     ], spacing=4),
                     on_click=on_write_post
                 ),
                 # Room / Feeling
                 ft.TextButton(
                     content=ft.Row([
-                        ft.Icon(ft.icons.INSERT_EMOTICON, color=ft.colors.AMBER_400, size=18),
-                        ft.Text("Feeling", size=12, weight=ft.FontWeight.W_500, color=ft.colors.ON_SURFACE)
+                        ft.Icon(ft.Icons.INSERT_EMOTICON, color=ft.Colors.AMBER_400, size=18),
+                        ft.Text("Feeling", size=12, weight=ft.FontWeight.W_500, color=ft.Colors.ON_SURFACE)
                     ], spacing=4),
                     on_click=lambda _: self.show_mock_alert("Feelings & Activities popup is coming soon!")
                 )
@@ -75,7 +74,7 @@ class Composer(ft.Container):
             self.page.snack_bar = ft.SnackBar(
                 content=ft.Text(message),
                 action="OK",
-                bgcolor=ft.colors.BLUE_800
+                bgcolor=ft.Colors.BLUE_800
             )
             self.page.snack_bar.open = True
             self.page.update()

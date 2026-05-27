@@ -18,11 +18,11 @@ class PostCard(ft.Container):
         self.is_liked = False
         
         super().__init__(
-            bgcolor=ft.colors.SURFACE,
+            bgcolor=ft.Colors.SURFACE,
             padding=12,
             border_radius=8,
-            shadow=ft.BoxShadow(blur_radius=1, color=ft.colors.with_opacity(0.08, ft.colors.BLACK)),
-            margin=ft.margin.only(bottom=8),
+            shadow=ft.BoxShadow(blur_radius=1, color=ft.Colors.with_opacity(0.08, ft.Colors.BLACK)),
+            margin=ft.Margin.only(bottom=8),
             animate_opacity=300,
             animate_scale=ft.Animation(300, ft.AnimationCurve.DECELERATE),
             opacity=0,
@@ -43,7 +43,7 @@ class PostCard(ft.Container):
             self.attachment_image,
             ft.Container(height=4),
             self.counters_row,
-            ft.Divider(height=1, color=ft.colors.OUTLINE_VARIANT),
+            ft.Divider(height=1, color=ft.Colors.OUTLINE_VARIANT),
             self.actions_row
         ], spacing=8)
 
@@ -56,33 +56,31 @@ class PostCard(ft.Container):
         group = self.post.get("group")
         if group:
             name_control = ft.Row([
-                ft.Text(self.author_name, weight=ft.FontWeight.BOLD, size=12, color=ft.colors.ON_SURFACE),
-                ft.Icon(ft.icons.NAVIGATE_NEXT, size=14, color=ft.colors.ON_SURFACE_VARIANT),
-                ft.Text(group.get("name"), weight=ft.FontWeight.BOLD, size=12, color=ft.colors.ON_SURFACE)
+                ft.Text(self.author_name, weight=ft.FontWeight.BOLD, size=12, color=ft.Colors.ON_SURFACE),
+                ft.Icon(ft.Icons.NAVIGATE_NEXT, size=14, color=ft.Colors.ON_SURFACE_VARIANT),
+                ft.Text(group.get("name"), weight=ft.FontWeight.BOLD, size=12, color=ft.Colors.ON_SURFACE)
             ], spacing=2, vertical_alignment=ft.CrossAxisAlignment.CENTER)
         else:
-            name_control = ft.Text(self.author_name, weight=ft.FontWeight.BOLD, size=13, color=ft.colors.ON_SURFACE)
+            name_control = ft.Text(self.author_name, weight=ft.FontWeight.BOLD, size=13, color=ft.Colors.ON_SURFACE)
 
         return ft.Row([
             # Avatar
             ft.CircleAvatar(
-                foreground_image_url=self.author_avatar,
+                foreground_image_src=self.author_avatar,
                 radius=18
             ),
             # Name + Timestamp
-            ft.Expanded(
-                child=ft.Column([
-                    name_control,
-                    ft.Row([
-                        ft.Text(self.post.get("create_at", "Just now"), size=11, color=ft.colors.ON_SURFACE_VARIANT),
-                        ft.Icon(ft.icons.PUBLIC, size=11, color=ft.colors.ON_SURFACE_VARIANT)
-                    ], spacing=4)
-                ], spacing=2)
-            ),
+            ft.Column([
+                name_control,
+                ft.Row([
+                    ft.Text(self.post.get("create_at", "Just now"), size=11, color=ft.Colors.ON_SURFACE_VARIANT),
+                    ft.Icon(ft.Icons.PUBLIC, size=11, color=ft.Colors.ON_SURFACE_VARIANT)
+                ], spacing=4)
+            ], spacing=2, expand=True),
             # More options button
             ft.IconButton(
-                icon=ft.icons.MORE_HORIZ,
-                icon_color=ft.colors.ON_SURFACE_VARIANT,
+                icon=ft.Icons.MORE_HORIZ,
+                icon_color=ft.Colors.ON_SURFACE_VARIANT,
                 icon_size=18,
                 on_click=self._show_post_options
             )
@@ -93,8 +91,8 @@ class PostCard(ft.Container):
         if not text:
             return ft.Container()
         return ft.Container(
-            content=ft.Text(text, size=13, color=ft.colors.ON_SURFACE),
-            padding=ft.padding.only(bottom=4)
+            content=ft.Text(text, size=13, color=ft.Colors.ON_SURFACE),
+            padding=ft.Padding.only(bottom=4)
         )
 
     def _build_attachment(self):
@@ -112,7 +110,7 @@ class PostCard(ft.Container):
                     ft.Container(
                         content=ft.Image(
                             src=img_url,
-                            fit=ft.ImageFit.COVER,
+                            fit=ft.BoxFit.COVER,
                             width=350,
                             height=250,
                         ),
@@ -127,21 +125,21 @@ class PostCard(ft.Container):
                     scroll=ft.ScrollMode.ADAPTIVE,
                     spacing=8,
                 ),
-                padding=ft.padding.only(bottom=4)
+                padding=ft.Padding.only(bottom=4)
             )
         else:
             # Single image fallback
             return ft.Container(
                 content=ft.Image(
                     src=single_img,
-                    fit=ft.ImageFit.COVER,
+                    fit=ft.BoxFit.COVER,
                     border_radius=4,
                     width=400,
                     height=250,
                 ),
                 border_radius=4,
                 clip_behavior=ft.ClipBehavior.ANTI_ALIAS,
-                alignment=ft.alignment.center
+                alignment=ft.Alignment.CENTER
             )
 
     def _build_counters(self):
@@ -160,19 +158,19 @@ class PostCard(ft.Container):
         
         reaction_icons = []
         reaction_config = {
-            "like": (ft.icons.THUMB_UP, ft.colors.BLUE_500),
-            "love": (ft.icons.FAVORITE, ft.colors.RED_500),
-            "haha": (ft.icons.SENTIMENT_VERY_SATISFIED, ft.colors.AMBER_400),
-            "wow": (ft.icons.EMOJI_EMOTIONS, ft.colors.AMBER_400),
-            "sad": (ft.icons.SENTIMENT_VERY_DISSATISFIED, ft.colors.AMBER_400),
-            "angry": (ft.icons.SENTIMENT_VERY_DISSATISFIED, ft.colors.ORANGE_700)
+            "like": (ft.Icons.THUMB_UP, ft.Colors.BLUE_500),
+            "love": (ft.Icons.FAVORITE, ft.Colors.RED_500),
+            "haha": (ft.Icons.SENTIMENT_VERY_SATISFIED, ft.Colors.AMBER_400),
+            "wow": (ft.Icons.EMOJI_EMOTIONS, ft.Colors.AMBER_400),
+            "sad": (ft.Icons.SENTIMENT_VERY_DISSATISFIED, ft.Colors.AMBER_400),
+            "angry": (ft.Icons.SENTIMENT_VERY_DISSATISFIED, ft.Colors.ORANGE_700)
         }
         
         for react_type, _ in top_reactions:
-            icon_name, color = reaction_config.get(react_type, (ft.icons.THUMB_UP, ft.colors.BLUE_500))
+            icon_name, color = reaction_config.get(react_type, (ft.Icons.THUMB_UP, ft.Colors.BLUE_500))
             reaction_icons.append(
                 ft.Container(
-                    content=ft.Icon(icon_name, size=10, color=ft.colors.WHITE),
+                    content=ft.Icon(icon_name, size=10, color=ft.Colors.WHITE),
                     bgcolor=color,
                     shape=ft.BoxShape.CIRCLE,
                     padding=3
@@ -182,21 +180,21 @@ class PostCard(ft.Container):
         if not reaction_icons:
              reaction_icons.append(
                 ft.Container(
-                    content=ft.Icon(ft.icons.THUMB_UP, size=10, color=ft.colors.WHITE),
-                    bgcolor=ft.colors.BLUE_500,
+                    content=ft.Icon(ft.Icons.THUMB_UP, size=10, color=ft.Colors.WHITE),
+                    bgcolor=ft.Colors.BLUE_500,
                     shape=ft.BoxShape.CIRCLE,
                     padding=3
                 )
             )
 
         reacts_row = ft.Row(reaction_icons + [
-            ft.Text(str(total_reacts), size=11, color=ft.colors.ON_SURFACE_VARIANT)
+            ft.Text(str(total_reacts), size=11, color=ft.Colors.ON_SURFACE_VARIANT)
         ], spacing=-4 if len(reaction_icons) > 1 else 4)
         
         comments_row = ft.Row([
-            ft.Text(f"{total_comments} comments", size=11, color=ft.colors.ON_SURFACE_VARIANT),
-            ft.Text(" • ", size=11, color=ft.colors.ON_SURFACE_VARIANT),
-            ft.Text("1 share", size=11, color=ft.colors.ON_SURFACE_VARIANT)
+            ft.Text(f"{total_comments} comments", size=11, color=ft.Colors.ON_SURFACE_VARIANT),
+            ft.Text(" • ", size=11, color=ft.Colors.ON_SURFACE_VARIANT),
+            ft.Text("1 share", size=11, color=ft.Colors.ON_SURFACE_VARIANT)
         ], spacing=2)
         
         return ft.Row([
@@ -210,11 +208,11 @@ class PostCard(ft.Container):
             "Like", 
             size=12, 
             weight=ft.FontWeight.W_500,
-            color=ft.colors.ON_SURFACE_VARIANT if not self.is_liked else ft.colors.BLUE_ACCENT_400
+            color=ft.Colors.ON_SURFACE_VARIANT if not self.is_liked else ft.Colors.BLUE_ACCENT_400
         )
         self.like_button_icon = ft.Icon(
-            ft.icons.THUMB_UP_OUTLINED if not self.is_liked else ft.icons.THUMB_UP, 
-            color=ft.colors.ON_SURFACE_VARIANT if not self.is_liked else ft.colors.BLUE_ACCENT_400, 
+            ft.Icons.THUMB_UP_OUTLINED if not self.is_liked else ft.Icons.THUMB_UP, 
+            color=ft.Colors.ON_SURFACE_VARIANT if not self.is_liked else ft.Colors.BLUE_ACCENT_400, 
             size=16
         )
 
@@ -224,7 +222,7 @@ class PostCard(ft.Container):
                     self.like_button_icon,
                     self.like_button_text
                 ], spacing=6),
-                padding=ft.padding.symmetric(8, 12),
+                padding=ft.Padding.symmetric(vertical=8, horizontal=12),
                 border_radius=4,
             ),
             on_tap=self._handle_like,
@@ -234,16 +232,16 @@ class PostCard(ft.Container):
         
         comment_button = ft.TextButton(
             content=ft.Row([
-                ft.Icon(ft.icons.CHAT_BUBBLE_OUTLINE, color=ft.colors.ON_SURFACE_VARIANT, size=16),
-                ft.Text("Comment", size=12, weight=ft.FontWeight.W_500, color=ft.colors.ON_SURFACE_VARIANT)
+                ft.Icon(ft.Icons.CHAT_BUBBLE_OUTLINE, color=ft.Colors.ON_SURFACE_VARIANT, size=16),
+                ft.Text("Comment", size=12, weight=ft.FontWeight.W_500, color=ft.Colors.ON_SURFACE_VARIANT)
             ], spacing=6),
             on_click=self._handle_comment_click
         )
         
         share_button = ft.TextButton(
             content=ft.Row([
-                ft.Icon(ft.icons.SHARE, color=ft.colors.ON_SURFACE_VARIANT, size=16),
-                ft.Text("Share", size=12, weight=ft.FontWeight.W_500, color=ft.colors.ON_SURFACE_VARIANT)
+                ft.Icon(ft.Icons.SHARE, color=ft.Colors.ON_SURFACE_VARIANT, size=16),
+                ft.Text("Share", size=12, weight=ft.FontWeight.W_500, color=ft.Colors.ON_SURFACE_VARIANT)
             ], spacing=6),
             on_click=self._handle_share
         )
@@ -258,12 +256,12 @@ class PostCard(ft.Container):
         if not self.page: return
 
         reaction_config = [
-            ("Like", ft.icons.THUMB_UP, ft.colors.BLUE_500, "like"),
-            ("Love", ft.icons.FAVORITE, ft.colors.RED_500, "love"),
-            ("Haha", ft.icons.SENTIMENT_VERY_SATISFIED, ft.colors.AMBER_400, "haha"),
-            ("Wow", ft.icons.EMOJI_EMOTIONS, ft.colors.AMBER_400, "wow"),
-            ("Sad", ft.icons.SENTIMENT_VERY_DISSATISFIED, ft.colors.AMBER_400, "sad"),
-            ("Angry", ft.icons.SENTIMENT_VERY_DISSATISFIED, ft.colors.ORANGE_700, "angry"),
+            ("Like", ft.Icons.THUMB_UP, ft.Colors.BLUE_500, "like"),
+            ("Love", ft.Icons.FAVORITE, ft.Colors.RED_500, "love"),
+            ("Haha", ft.Icons.SENTIMENT_VERY_SATISFIED, ft.Colors.AMBER_400, "haha"),
+            ("Wow", ft.Icons.EMOJI_EMOTIONS, ft.Colors.AMBER_400, "wow"),
+            ("Sad", ft.Icons.SENTIMENT_VERY_DISSATISFIED, ft.Colors.AMBER_400, "sad"),
+            ("Angry", ft.Icons.SENTIMENT_VERY_DISSATISFIED, ft.Colors.ORANGE_700, "angry"),
         ]
 
         reactions = []
@@ -275,22 +273,22 @@ class PostCard(ft.Container):
                     on_click=lambda e, rt=r_type: self._handle_reaction_select(rt),
                     tooltip=name,
                     shape=ft.BoxShape.CIRCLE,
-                    animate=ft.animation.Animation(200, "decelerate"),
+                    animate=ft.Animation(200, "decelerate"),
                     on_hover=lambda e: setattr(e.control, 'scale', 1.3 if e.data == "true" else 1) or e.control.update()
                 )
             )
 
         picker = ft.Container(
             content=ft.Row(reactions, spacing=4, tight=True),
-            bgcolor=ft.colors.SURFACE,
+            bgcolor=ft.Colors.SURFACE,
             border_radius=30,
-            padding=ft.padding.symmetric(4, 8),
-            shadow=ft.BoxShadow(blur_radius=10, color=ft.colors.with_opacity(0.2, ft.colors.BLACK)),
+            padding=ft.Padding.symmetric(vertical=4, horizontal=8),
+            shadow=ft.BoxShadow(blur_radius=10, color=ft.Colors.with_opacity(0.2, ft.Colors.BLACK)),
             left=e.global_x - 100 if hasattr(e, "global_x") else 50,
             top=e.global_y - 80 if hasattr(e, "global_y") else 50,
             animate_opacity=200,
             offset=ft.Offset(0, -0.5),
-            animate_offset=ft.animation.Animation(300, "decelerate")
+            animate_offset=ft.Animation(300, "decelerate")
         )
 
         def close_picker(e):
@@ -299,7 +297,7 @@ class PostCard(ft.Container):
 
         # Add a transparent layer to close picker when clicking outside
         dismiss_layer = ft.GestureDetector(
-            content=ft.Container(expand=True, bgcolor=ft.colors.TRANSPARENT),
+            content=ft.Container(expand=True, bgcolor=ft.Colors.TRANSPARENT),
             on_tap=close_picker
         )
         
@@ -321,16 +319,16 @@ class PostCard(ft.Container):
         
         # Update button visuals based on reaction
         reaction_config = {
-            "like": (ft.icons.THUMB_UP, ft.colors.BLUE_ACCENT_400, "Like"),
-            "love": (ft.icons.FAVORITE, ft.colors.RED_500, "Love"),
-            "haha": (ft.icons.SENTIMENT_VERY_SATISFIED, ft.colors.AMBER_400, "Haha"),
-            "wow": (ft.icons.EMOJI_EMOTIONS, ft.colors.AMBER_400, "Wow"),
-            "sad": (ft.icons.SENTIMENT_VERY_DISSATISFIED, ft.colors.AMBER_400, "Sad"),
-            "angry": (ft.icons.SENTIMENT_VERY_DISSATISFIED, ft.colors.ORANGE_700, "Angry")
+            "like": (ft.Icons.THUMB_UP, ft.Colors.BLUE_ACCENT_400, "Like"),
+            "love": (ft.Icons.FAVORITE, ft.Colors.RED_500, "Love"),
+            "haha": (ft.Icons.SENTIMENT_VERY_SATISFIED, ft.Colors.AMBER_400, "Haha"),
+            "wow": (ft.Icons.EMOJI_EMOTIONS, ft.Colors.AMBER_400, "Wow"),
+            "sad": (ft.Icons.SENTIMENT_VERY_DISSATISFIED, ft.Colors.AMBER_400, "Sad"),
+            "angry": (ft.Icons.SENTIMENT_VERY_DISSATISFIED, ft.Colors.ORANGE_700, "Angry")
         }
         
         icon, color, text = reaction_config.get(reaction_type)
-        self.like_button_icon.name = icon
+        self.like_button_icon.icon = icon
         self.like_button_icon.color = color
         self.like_button_text.value = text
         self.like_button_text.color = color
@@ -345,15 +343,15 @@ class PostCard(ft.Container):
         
         # Reset to default like button visuals
         if self.is_liked:
-            self.like_button_icon.name = ft.icons.THUMB_UP
-            self.like_button_icon.color = ft.colors.BLUE_ACCENT_400
+            self.like_button_icon.icon = ft.Icons.THUMB_UP
+            self.like_button_icon.color = ft.Colors.BLUE_ACCENT_400
             self.like_button_text.value = "Like"
-            self.like_button_text.color = ft.colors.BLUE_ACCENT_400
+            self.like_button_text.color = ft.Colors.BLUE_ACCENT_400
         else:
-            self.like_button_icon.name = ft.icons.THUMB_UP_OUTLINED
-            self.like_button_icon.color = ft.colors.ON_SURFACE_VARIANT
+            self.like_button_icon.icon = ft.Icons.THUMB_UP_OUTLINED
+            self.like_button_icon.color = ft.Colors.ON_SURFACE_VARIANT
             self.like_button_text.value = "Like"
-            self.like_button_text.color = ft.colors.ON_SURFACE_VARIANT
+            self.like_button_text.color = ft.Colors.ON_SURFACE_VARIANT
         
         self._refresh_counters()
 
@@ -383,7 +381,7 @@ class PostCard(ft.Container):
             self.page.snack_bar = ft.SnackBar(
                 content=ft.Text("Post shared successfully to your timeline!"),
                 action="OK",
-                bgcolor=ft.colors.GREEN_800
+                bgcolor=ft.Colors.GREEN_800
             )
             self.page.snack_bar.open = True
             self.page.update()
@@ -408,7 +406,7 @@ class PostCard(ft.Container):
                 title=ft.Text("Post Options"),
                 content=ft.Text("What would you like to do with this post?"),
                 actions=[
-                    ft.TextButton("Delete Post", on_click=delete_post, icon=ft.icons.DELETE, icon_color=ft.colors.RED_400),
+                    ft.TextButton("Delete Post", on_click=delete_post, icon=ft.Icons.DELETE, icon_color=ft.Colors.RED_400),
                     ft.TextButton("Cancel", on_click=lambda _: setattr(self.page.dialog, 'open', False) or self.page.update())
                 ]
             )

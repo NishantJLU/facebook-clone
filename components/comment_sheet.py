@@ -28,18 +28,18 @@ class CommentSheet(ft.Container):
             hint_text="Write a comment...",
             border_radius=20,
             expand=True,
-            content_padding=ft.padding.symmetric(10, 16),
+            content_padding=ft.Padding.symmetric(vertical=10, horizontal=16),
             text_size=13,
             on_submit=self._submit_comment,
-            bgcolor=ft.colors.SURFACE_VARIANT,
-            border_color=ft.colors.TRANSPARENT,
-            hint_style=ft.TextStyle(color=ft.colors.ON_SURFACE_VARIANT),
+            bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST,
+            border_color=ft.Colors.TRANSPARENT,
+            hint_style=ft.TextStyle(color=ft.Colors.ON_SURFACE_VARIANT),
         )
 
         super().__init__(
-            bgcolor=ft.colors.SURFACE,
-            border_radius=ft.border_radius.only(top_left=16, top_right=16),
-            padding=ft.padding.only(left=16, right=16, top=16, bottom=24),
+            bgcolor=ft.Colors.SURFACE,
+            border_radius=ft.BorderRadius.only(top_left=16, top_right=16),
+            padding=ft.Padding.only(left=16, right=16, top=16, bottom=24),
             height=500,  # Slide-up modal height
         )
 
@@ -48,38 +48,38 @@ class CommentSheet(ft.Container):
             ft.Row([
                 ft.Text(f"Comments ({len(self.comments)})", weight=ft.FontWeight.BOLD, size=16),
                 ft.IconButton(
-                    icon=ft.icons.CLOSE,
+                    icon=ft.Icons.CLOSE,
                     on_click=lambda e: self.close_sheet()
                 )
             ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
             
-            ft.Divider(height=1, color=ft.colors.OUTLINE_VARIANT),
+            ft.Divider(height=1, color=ft.Colors.OUTLINE_VARIANT),
             
             # Scrollable list area
             ft.Container(
                 content=self.comments_column,
                 expand=True,
-                padding=ft.padding.symmetric(vertical=8)
+                padding=ft.Padding.symmetric(vertical=8)
             ),
             
-            ft.Divider(height=1, color=ft.colors.OUTLINE_VARIANT),
+            ft.Divider(height=1, color=ft.Colors.OUTLINE_VARIANT),
             
             # Input Row (Sticky at the bottom)
             ft.Container(
                 content=ft.Row([
                     ft.CircleAvatar(
-                        foreground_image_url=avatar_url,
+                        foreground_image_src=avatar_url,
                         radius=16
                     ),
                     self.input_field,
                     ft.IconButton(
-                        icon=ft.icons.SEND,
-                        icon_color=ft.colors.BLUE_ACCENT_400,
+                        icon=ft.Icons.SEND,
+                        icon_color=ft.Colors.BLUE_ACCENT_400,
                         icon_size=20,
                         on_click=self._submit_comment
                     )
                 ], spacing=8),
-                padding=ft.padding.only(top=8)
+                padding=ft.Padding.only(top=8)
             )
         ], spacing=10)
 
@@ -90,8 +90,8 @@ class CommentSheet(ft.Container):
             # Empty state
             self.comments_column.controls.append(
                 ft.Container(
-                    content=ft.Text("No comments yet. Be the first to comment!", italic=True, color=ft.colors.ON_SURFACE_VARIANT),
-                    alignment=ft.alignment.center,
+                    content=ft.Text("No comments yet. Be the first to comment!", italic=True, color=ft.Colors.ON_SURFACE_VARIANT),
+                    alignment=ft.Alignment.CENTER,
                     padding=20
                 )
             )
@@ -105,30 +105,31 @@ class CommentSheet(ft.Container):
             
             comment_bubble = ft.Row([
                 ft.CircleAvatar(
-                    foreground_image_url=avatar,
+                    foreground_image_src=avatar,
                     radius=16,
-                    alignment=ft.alignment.top_center
+                    alignment=ft.Alignment.TOP_CENTER
                 ),
-                ft.Expanded(
-                    child=ft.Column([
-                        # Comment Bubble Container
-                        ft.Container(
-                            content=ft.Column([
-                                ft.Text(name, weight=ft.FontWeight.BOLD, size=12, color=ft.colors.ON_SURFACE),
-                                ft.Text(content, size=13, color=ft.colors.ON_SURFACE)
-                            ], spacing=2),
-                            bgcolor=ft.colors.SURFACE_VARIANT,
-                            border_radius=12,
-                            padding=ft.padding.all(10),
-                        ),
-                        # Comment Actions Row
-                        ft.Row([
-                            ft.Text(create_at, size=10, color=ft.colors.ON_SURFACE_VARIANT),
-                            ft.Text("Like", size=10, weight=ft.FontWeight.BOLD, color=ft.colors.ON_SURFACE_VARIANT),
-                            ft.Text("Reply", size=10, weight=ft.FontWeight.BOLD, color=ft.colors.ON_SURFACE_VARIANT),
-                        ], spacing=12, padding=ft.padding.only(left=4))
-                    ], spacing=2)
-                )
+                ft.Column([
+                    # Comment Bubble Container
+                    ft.Container(
+                        content=ft.Column([
+                            ft.Text(name, weight=ft.FontWeight.BOLD, size=12, color=ft.Colors.ON_SURFACE),
+                            ft.Text(content, size=13, color=ft.Colors.ON_SURFACE)
+                        ], spacing=2),
+                        bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST,
+                        border_radius=12,
+                        padding=ft.Padding.all(10),
+                    ),
+                    # Comment Actions Row
+                    ft.Container(
+                        content=ft.Row([
+                            ft.Text(create_at, size=10, color=ft.Colors.ON_SURFACE_VARIANT),
+                            ft.Text("Like", size=10, weight=ft.FontWeight.BOLD, color=ft.Colors.ON_SURFACE_VARIANT),
+                            ft.Text("Reply", size=10, weight=ft.FontWeight.BOLD, color=ft.Colors.ON_SURFACE_VARIANT),
+                        ], spacing=12),
+                        padding=ft.Padding.only(left=4)
+                    )
+                ], spacing=2, expand=True)
             ], vertical_alignment=ft.CrossAxisAlignment.START, spacing=8)
             
             self.comments_column.controls.append(comment_bubble)

@@ -3,14 +3,13 @@ from database.db_manager import DatabaseManager
 
 class MarketplaceView(ft.Container):
     def __init__(self, db_manager: DatabaseManager):
-        super().__init__(expand=True)
+        super().__init__(expand=True, padding=12)
         self.db_manager = db_manager
         
         self.scroll_column = ft.Column(
             scroll=ft.ScrollMode.ALWAYS,
             expand=True,
             spacing=12,
-            padding=12
         )
         self.content = self.scroll_column
         self.refresh_marketplace()
@@ -23,24 +22,24 @@ class MarketplaceView(ft.Container):
             ft.Row([
                 ft.Text("Marketplace", size=24, weight=ft.FontWeight.BOLD),
                 ft.Row([
-                    ft.IconButton(ft.icons.PERSON_ROUNDED, bgcolor=ft.colors.SURFACE_VARIANT),
-                    ft.IconButton(ft.icons.SEARCH_ROUNDED, bgcolor=ft.colors.SURFACE_VARIANT)
+                    ft.IconButton(ft.Icons.PERSON_ROUNDED, bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST),
+                    ft.IconButton(ft.Icons.SEARCH_ROUNDED, bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST)
                 ], spacing=8)
             ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN)
         )
         
         # Categories
         categories = [
-            ("Vehicles", ft.icons.DIRECTIONS_CAR),
-            ("Rentals", ft.icons.HOUSE),
-            ("Electronics", ft.icons.DEVICES),
-            ("Free", ft.icons.FAVORITE)
+            ("Vehicles", ft.Icons.DIRECTIONS_CAR),
+            ("Rentals", ft.Icons.HOUSE),
+            ("Electronics", ft.Icons.DEVICES),
+            ("Free", ft.Icons.FAVORITE)
         ]
         cat_row = ft.Row([
             ft.Container(
                 content=ft.Row([ft.Icon(icon, size=16), ft.Text(label, size=12, weight=ft.FontWeight.W_500)], spacing=4),
-                bgcolor=ft.colors.SURFACE_VARIANT,
-                padding=ft.padding.symmetric(6, 12),
+                bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST,
+                padding=ft.Padding.symmetric(vertical=6, horizontal=12),
                 border_radius=20,
             ) for label, icon in categories
         ], scroll=ft.ScrollMode.HIDDEN)
@@ -72,7 +71,7 @@ class MarketplaceView(ft.Container):
         
         return ft.Container(
             content=ft.Column([
-                ft.Image(src=img_url, fit=ft.ImageFit.COVER, expand=True, border_radius=ft.border_radius.only(top_left=8, top_right=8)),
+                ft.Image(src=img_url, fit=ft.BoxFit.COVER, expand=True, border_radius=ft.BorderRadius.only(top_left=8, top_right=8)),
                 ft.Container(
                     content=ft.Column([
                         ft.Text(f"₫{price:,}", weight=ft.FontWeight.BOLD, size=14),
@@ -81,7 +80,7 @@ class MarketplaceView(ft.Container):
                     padding=8
                 )
             ], spacing=0),
-            bgcolor=ft.colors.SURFACE,
+            bgcolor=ft.Colors.SURFACE,
             border_radius=8,
             on_click=lambda e: self._show_product_details(product)
         )
@@ -98,23 +97,23 @@ class MarketplaceView(ft.Container):
                 content=ft.Column([
                     ft.Row([
                         ft.Text("Product Details", weight=ft.FontWeight.BOLD, size=18),
-                        ft.IconButton(ft.icons.CLOSE, on_click=close_sheet)
+                        ft.IconButton(ft.Icons.CLOSE, on_click=close_sheet)
                     ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
-                    ft.Image(src=product.get("images", [""])[0], height=250, fit=ft.ImageFit.COVER, border_radius=8),
+                    ft.Image(src=product.get("images", [""])[0], height=250, fit=ft.BoxFit.COVER, border_radius=8),
                     ft.Text(product.get("title"), weight=ft.FontWeight.BOLD, size=20),
-                    ft.Text(f"₫{product.get('price'):,}", color=ft.colors.BLUE_ACCENT_400, weight=ft.FontWeight.BOLD, size=18),
-                    ft.Text(f"Status: {product.get('statusTxt')}", size=14, color=ft.colors.ON_SURFACE_VARIANT),
+                    ft.Text(f"${product.get('price'):,}", color=ft.Colors.BLUE_ACCENT_400, weight=ft.FontWeight.BOLD, size=18),
+                    ft.Text(f"Status: {product.get('statusTxt')}", size=14, color=ft.Colors.ON_SURFACE_VARIANT),
                     ft.Divider(),
                     ft.Text("Description", weight=ft.FontWeight.BOLD),
                     ft.Text(product.get("description"), size=14),
                     ft.Row([
-                        ft.ElevatedButton("Message Seller", icon=ft.icons.CHAT, expand=True),
-                        ft.IconButton(ft.icons.SHARE, bgcolor=ft.colors.SURFACE_VARIANT)
+                        ft.Button("Message Seller", icon=ft.Icons.CHAT, expand=True),
+                        ft.IconButton(ft.Icons.SHARE, bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST)
                     ], spacing=10)
                 ], spacing=12, scroll=ft.ScrollMode.ALWAYS, tight=True),
                 padding=20,
-                bgcolor=ft.colors.SURFACE,
-                border_radius=ft.border_radius.only(top_left=16, top_right=16)
+                bgcolor=ft.Colors.SURFACE,
+                border_radius=ft.BorderRadius.only(top_left=16, top_right=16)
             ),
             is_scroll_controlled=True,
         )

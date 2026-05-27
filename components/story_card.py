@@ -17,8 +17,8 @@ class StoryCard(ft.Container):
             border_radius=12,
             clip_behavior=ft.ClipBehavior.ANTI_ALIAS,
             on_click=lambda e: on_story_click(story) if on_story_click else None,
-            shadow=ft.BoxShadow(blur_radius=4, color=ft.colors.with_opacity(0.15, ft.colors.BLACK)),
-            animate=ft.animation.Animation(200, ft.AnimationCurve.EASE_OUT)
+            shadow=ft.BoxShadow(blur_radius=4, color=ft.Colors.with_opacity(0.15, ft.Colors.BLACK)),
+            animate=ft.Animation(200, ft.AnimationCurve.EASE_OUT)
         )
         
         # Visual contents
@@ -26,16 +26,16 @@ class StoryCard(ft.Container):
             # Story Image Cover
             ft.Image(
                 src=story_image,
-                fit=ft.ImageFit.COVER,
+                fit=ft.BoxFit.COVER,
                 width=100,
                 height=160
             ),
             # Dark bottom gradient overlay
             ft.Container(
                 gradient=ft.LinearGradient(
-                    begin=ft.alignment.top_center,
-                    end=ft.alignment.bottom_center,
-                    colors=[ft.colors.TRANSPARENT, ft.colors.with_opacity(0.65, ft.colors.BLACK)]
+                    begin=ft.Alignment.TOP_CENTER,
+                    end=ft.Alignment.BOTTOM_CENTER,
+                    colors=[ft.Colors.TRANSPARENT, ft.Colors.with_opacity(0.65, ft.Colors.BLACK)]
                 ),
                 width=100,
                 height=160
@@ -43,19 +43,19 @@ class StoryCard(ft.Container):
             # User Avatar (Top-left, blue border if unviewed)
             ft.Container(
                 content=ft.CircleAvatar(
-                    foreground_image_url=avatar_url,
+                    foreground_image_src=avatar_url,
                     radius=16,
                 ),
                 top=8,
                 left=8,
-                border=ft.border.all(2, ft.colors.BLUE_ACCENT_400),
+                border=ft.Border.all(2, ft.Colors.BLUE_ACCENT_400),
                 border_radius=18
             ),
             # User Name (Bottom-left)
             ft.Container(
                 content=ft.Text(
                     user_name,
-                    color=ft.colors.WHITE,
+                    color=ft.Colors.WHITE,
                     size=10,
                     weight=ft.FontWeight.W_600,
                     max_lines=2,
@@ -87,15 +87,15 @@ class CreateStoryCard(ft.Container):
             border_radius=12,
             clip_behavior=ft.ClipBehavior.ANTI_ALIAS,
             on_click=on_create_click,
-            shadow=ft.BoxShadow(blur_radius=4, color=ft.colors.with_opacity(0.15, ft.colors.BLACK)),
-            animate=ft.animation.Animation(200, ft.AnimationCurve.EASE_OUT)
+            shadow=ft.BoxShadow(blur_radius=4, color=ft.Colors.with_opacity(0.15, ft.Colors.BLACK)),
+            animate=ft.Animation(200, ft.AnimationCurve.EASE_OUT)
         )
         
         self.content = ft.Stack([
             # Top half: user avatar
             ft.Image(
                 src=avatar_url,
-                fit=ft.ImageFit.COVER,
+                fit=ft.BoxFit.COVER,
                 width=100,
                 height=110
             ),
@@ -105,13 +105,13 @@ class CreateStoryCard(ft.Container):
                     ft.Container(height=4),
                     ft.Text(
                         "Create\nStory",
-                        color=ft.colors.BLUE_ACCENT_400,
+                        color=ft.Colors.BLUE_ACCENT_400,
                         size=10,
                         weight=ft.FontWeight.BOLD,
                         text_align=ft.TextAlign.CENTER
                     )
                 ], alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
-                bgcolor=ft.colors.SURFACE_VARIANT,
+                bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST,
                 width=100,
                 height=50,
                 bottom=0,
@@ -119,12 +119,12 @@ class CreateStoryCard(ft.Container):
             # Blue Plus Icon overlapping the border
             ft.Container(
                 content=ft.Icon(
-                    name=ft.icons.ADD,
-                    color=ft.colors.WHITE,
+                    icon=ft.Icons.ADD,
+                    color=ft.Colors.WHITE,
                     size=16
                 ),
-                bgcolor=ft.colors.BLUE_ACCENT_400,
-                border=ft.border.all(2, ft.colors.SURFACE_VARIANT),
+                bgcolor=ft.Colors.BLUE_ACCENT_400,
+                border=ft.Border.all(2, ft.Colors.SURFACE_CONTAINER_HIGHEST),
                 border_radius=15,
                 width=24,
                 height=24,
